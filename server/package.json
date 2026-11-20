@@ -3,7 +3,22 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "node --eval \"process.exit(0)\"",
-    "dev": "node --eval \"console.log('server starts in a later block')\""
+    "build": "prisma generate && tsc -p tsconfig.json --noEmit",
+    "dev": "tsx src/index.ts",
+    "test": "vitest run",
+    "start": "prisma migrate deploy && tsx src/index.ts"
+  },
+  "dependencies": {
+    "@fastify/cookie": "^11.0.2",
+    "@fastify/cors": "^11.1.0",
+    "@prisma/client": "^5.22.0",
+    "fastify": "^5.6.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "prisma": "^5.22.0",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
   }
 }

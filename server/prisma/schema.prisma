@@ -1,0 +1,81 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Player {
+  id           String        @id @default(cuid())
+  createdAt    DateTime      @default(now())
+  sessions     Session[]
+  answers      Answer[]
+  pairs        PairsGame[]
+  achievements Achievement[]
+  intros       LevelIntro[]
+}
+
+model Session {
+  id         String    @id @default(cuid())
+  playerId   String
+  player     Player    @relation(fields: [playerId], references: [id])
+  drillId    String
+  level      String
+  startedAt  DateTime  @default(now())
+  finishedAt DateTime?
+  answers    Answer[]
+}
+
+model Answer {
+  id         String   @id @default(cuid())
+  playerId   String
+  player     Player   @relation(fields: [playerId], references: [id])
+  sessionId  String
+  session    Session  @relation(fields: [sessionId], references: [id])
+  drillId    String
+  level      String
+  question   Json
+  response   Json
+  correct    Boolean
+  durationMs Int
+  createdAt  DateTime @default(now())
+
+  @@index([playerId, drillId, level, createdAt])
+}
+
+model PairsGame {
+  id        String   @id @default(cuid())
+  playerId  String
+  player    Player   @relation(fields: [playerId], references: [id])
+  level     String
+  chartId   String
+  moves     Int
+  seconds   Int
+  stars     Int
+  passed    Boolean
+  createdAt DateTime @default(now())
+}
+
+model Achievement {
+  id         String   @id @default(cuid())
+  playerId   String
+  player     Player   @relation(fields: [playerId], references: [id])
+  key        String
+  unlockedAt DateTime @default(now())
+
+  @@unique([playerId, key])
+}
+
+model LevelIntro {
+  id       String   @id @default(cuid())
+  playerId String
+  player   Player   @relation(fields: [playerId], references: [id])
+  drillId  String
+  level    String
+  seenAt   DateTime @default(now())
+
+  @@unique([playerId, drillId, level])
+}

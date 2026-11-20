@@ -1,0 +1,44 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: holdem
+      POSTGRES_PASSWORD: holdem
+      POSTGRES_DB: holdem
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U holdem -d holdem"]
+      interval: 2s
+      timeout: 5s
+      retries: 20
+    ports:
+      - "5432:5432"
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    environment:
+      DATABASE_URL: postgresql://holdem:holdem@postgres:5432/holdem
+      CHARTS_PATH: /data/charts.json
+      PORT: 8787
+    volumes:
+      - ${CHARTS_PATH:-./server/test/fixtures/charts.json}:/data/charts.json:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8787:8787"
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    depends_on:
+      - api
+    ports:
+      - "8080:80"
+
+volumes:
+  pgdata:
