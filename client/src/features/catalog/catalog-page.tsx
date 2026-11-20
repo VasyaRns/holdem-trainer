@@ -37,27 +37,29 @@ export function CatalogPage() {
     <section className="space-y-8">
       <div className="space-y-3">
         <h1 className="text-3xl tracking-tight">Каталог</h1>
-        <Link className="inline-flex rounded-xl bg-primary px-4 py-2 text-primary-foreground" to="/today">
-          Сегодня
-        </Link>
-        <Link className="text-primary" to="/mistakes">
-          Повторить ошибки
-        </Link>
-        <Link className="text-primary" to="/ranges">
-          Диапазоны
-        </Link>
-        <Link className="text-primary" to="/pairs">
-          Пары
-        </Link>
-        {saved.map((item) => (
-          <Link key={item.id} className="text-primary" to={`/ranges/${item.chartId}`}>
-            {item.name}
-            <span className="num text-muted-foreground">
-              {" "}
-              · {item.total} ответов, {Math.round(item.accuracy * 100)}%
-            </span>
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+          <Link className="inline-flex min-h-11 items-center rounded-lg bg-primary px-4 text-primary-foreground" to="/today">
+            Сегодня
           </Link>
-        ))}
+          <Link className="text-primary" to="/mistakes">
+            Повторить ошибки
+          </Link>
+          <Link className="text-primary" to="/ranges">
+            Диапазоны
+          </Link>
+          <Link className="text-primary" to="/pairs">
+            Пары
+          </Link>
+          {saved.map((item) => (
+            <Link key={item.id} className="text-primary" to={`/ranges/${item.chartId}`}>
+              {item.name}
+              <span className="num text-muted-foreground">
+                {" "}
+                · {item.total} ответов, {Math.round(item.accuracy * 100)}%
+              </span>
+            </Link>
+          ))}
+        </div>
         {failed ? <p className="text-muted-foreground">Часть прогресса не загрузилась. Незагруженные уровни остаются закрытыми.</p> : null}
         {savedError ? <p className="text-muted-foreground">Сохранённые наборы не загрузились.</p> : null}
       </div>

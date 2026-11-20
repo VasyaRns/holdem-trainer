@@ -197,7 +197,7 @@ export function MistakesPage() {
             startedAt.current = Date.now();
           }}
         >
-          <p className="text-[#9b3d3d]">Мимо. {grade.formula}</p>
+          <p className="text-miss">Мимо. {grade.formula}</p>
           <Button type="submit" autoFocus>
             Дальше
           </Button>

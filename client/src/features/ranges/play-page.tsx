@@ -215,7 +215,7 @@ export function RangePlayPage() {
             else setMiss("");
           }}
         >
-          <p className="text-[#9b3d3d]">Мимо. {miss}</p>
+          <p className="text-miss">Мимо. {miss}</p>
           <Button type="submit">Дальше</Button>
         </form>
       ) : pending ? (
