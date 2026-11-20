@@ -3,6 +3,7 @@ import { registry } from "@holdem/engine";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { loadMathStats } from "../session/api";
+import { loadSaved, type SavedSet } from "../ranges/api";
 
 const levels = [
   ["easy", "Простой"],
@@ -13,6 +14,8 @@ const levels = [
 export function CatalogPage() {
   const [stats, setStats] = useState<LevelStat[] | null>(null);
   const [failed, setFailed] = useState(false);
+  const [saved, setSaved] = useState<SavedSet[]>([]);
+  const [savedError, setSavedError] = useState(false);
 
   useEffect(() => {
     loadMathStats()
@@ -24,6 +27,9 @@ export function CatalogPage() {
         setStats([]);
         setFailed(true);
       });
+    loadSaved()
+      .then((body) => setSaved(body.saved ?? []))
+      .catch(() => setSavedError(true));
   }, []);
 
   const known = stats ?? [];
@@ -37,7 +43,20 @@ export function CatalogPage() {
         <Link className="text-primary" to="/mistakes">
           Повторить ошибки
         </Link>
+        <Link className="text-primary" to="/ranges">
+          Диапазоны
+        </Link>
+        {saved.map((item) => (
+          <Link key={item.id} className="text-primary" to={`/ranges/${item.chartId}`}>
+            {item.name}
+            <span className="num text-muted-foreground">
+              {" "}
+              · {item.total} ответов, {Math.round(item.accuracy * 100)}%
+            </span>
+          </Link>
+        ))}
         {failed ? <p className="text-muted-foreground">Часть прогресса не загрузилась. Незагруженные уровни остаются закрытыми.</p> : null}
+        {savedError ? <p className="text-muted-foreground">Сохранённые наборы не загрузились.</p> : null}
       </div>
       {registry.length === 0 ? (
         <p className="text-muted-foreground">Тренажёры появятся следующими блоками.</p>
@@ -49,7 +68,7 @@ export function CatalogPage() {
               <span className="flex gap-3 text-sm">
                 {levels.map(([level, label]) =>
                   level === "easy" || (stats !== null && levelOpen(known, drill.id, level)) ? (
-                    <Link key={level} className="text-primary" to={`/train/${drill.id}?level=${level}`}>
+                    <Link key={level} className="text-primary" to={drill.id === "ranges" ? `/ranges/play?level=${level}` : `/train/${drill.id}?level=${level}`}>
                       {label}
                     </Link>
                   ) : (

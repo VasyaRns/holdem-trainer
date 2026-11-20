@@ -1,5 +1,5 @@
 import { expect, it } from "vitest";
-import { achievementKeys, allEasyCleared, hardOpen, hasDayRun, lastThirtyAccurate, mediumOpen, statsFromAnswers, unresolvedMistakes } from "../src/progress.ts";
+import { achievementKeys, allEasyCleared, chartStats, hardOpen, hasDayRun, lastThirtyAccurate, mediumOpen, statsFromAnswers, unresolvedMistakes } from "../src/progress.ts";
 
 it("ошибка закрывается верным ответом того же уровня", () => {
   const first = new Date("2026-01-01T00:00:00Z");
@@ -80,4 +80,14 @@ it("средний открывается квотой простого, а се
   expect(lastThirtyAccurate(thirty)).toBe(true);
   expect(lastThirtyAccurate(thirty.slice(0, 29))).toBe(false);
   expect(allEasyCleared(statsFromAnswers(easy))).toBe(false);
+});
+
+it("статистика набора считается только по ответам этого чарта", () => {
+  const answers = [
+    { question: { chartId: "utg-open-10" }, correct: true },
+    { question: { chartId: "utg-open-10" }, correct: false },
+    { question: { chartId: "bu-open-10" }, correct: true },
+  ];
+  expect(chartStats(answers, "utg-open-10")).toEqual({ total: 2, correct: 1, accuracy: 0.5 });
+  expect(chartStats(answers, "missing")).toEqual({ total: 0, correct: 0, accuracy: 0 });
 });

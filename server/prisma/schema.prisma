@@ -16,6 +16,7 @@ model Player {
   pairs        PairsGame[]
   achievements Achievement[]
   intros       LevelIntro[]
+  saved        SavedDrill[]
 }
 
 model Session {
@@ -79,4 +80,15 @@ model LevelIntro {
   seenAt   DateTime @default(now())
 
   @@unique([playerId, drillId, level])
+}
+
+model SavedDrill {
+  id        String   @id @default(cuid())
+  playerId  String
+  player    Player   @relation(fields: [playerId], references: [id])
+  name      String
+  chartId   String
+  createdAt DateTime @default(now())
+
+  @@unique([playerId, chartId])
 }

@@ -4,10 +4,11 @@ import { ev } from "./drills/ev.ts";
 import { mdf } from "./drills/mdf.ts";
 import { outs } from "./drills/outs.ts";
 import { pot } from "./drills/pot.ts";
+import { ranges } from "./drills/ranges.ts";
 import { rule } from "./drills/rule.ts";
 import { spr } from "./drills/spr.ts";
 
-export const registry: DrillModule[] = [outs, rule, pot, combos, ev, mdf, spr];
+export const registry: DrillModule[] = [outs, rule, pot, combos, ev, mdf, spr, ranges];
 
 export function findDrill(id: string): DrillModule | undefined {
   return registry.find((drill) => drill.id === id);

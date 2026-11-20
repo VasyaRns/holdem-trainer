@@ -2,6 +2,7 @@ import { MATH_DRILLS, type LevelId, type LevelStat } from "@holdem/domain";
 
 const json = { "content-type": "application/json" };
 const levels: LevelId[] = ["easy", "medium", "hard"];
+const drills = [...MATH_DRILLS, "ranges"];
 
 export async function postJson<T>(url: string, body: unknown): Promise<T> {
   const response = await fetch(url, { method: "POST", credentials: "include", headers: json, body: JSON.stringify(body) });
@@ -25,7 +26,7 @@ export type LevelSummary = {
 };
 
 export type AnswerDraft = {
-  question: { key: string; handId: string };
+  question: { key: string; handId: string; chartId?: string };
   response: unknown;
   correct: boolean;
   miss: number;
@@ -70,7 +71,7 @@ export function loadLevel(drillId: string, level: string) {
 
 export async function loadMathStats(): Promise<{ stats: LevelStat[]; failed: boolean }> {
   const rows = await Promise.all(
-    MATH_DRILLS.flatMap((drillId) =>
+    drills.flatMap((drillId) =>
       levels.map(async (level) => {
         try {
           const body = await loadLevel(drillId, level);

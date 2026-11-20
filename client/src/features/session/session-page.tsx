@@ -1,7 +1,7 @@
 import { QUOTAS, achievementTitle, findArticle, levelOpen, type LevelId } from "@holdem/domain";
 import { afterAnswer, findDrill, type Grade, type Question, type RepeatTrack } from "@holdem/engine";
 import { useEffect, useRef, useState } from "react";
-import { Link, useParams, useSearchParams } from "react-router-dom";
+import { Link, Navigate, useParams, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { getJson, loadLevel, openSession, postJson, saveAnswer, type LevelSummary } from "./api";
 
@@ -115,6 +115,7 @@ export function SessionPage() {
   }, [question?.handId]);
 
   if (!drill) return <p>Такого тренажёра нет.</p>;
+  if (drill.id === "ranges") return <Navigate to={`/ranges/play?level=${level}${today ? "&today=1" : ""}`} replace />;
   if (gate === "locked" && previous) {
     const quota = QUOTAS[previous];
     const title = level === "medium" ? "Средний" : "Сложный";

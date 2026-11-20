@@ -86,6 +86,12 @@ export function lastThirtyAccurate(answers: { correct: boolean; createdAt: Date 
   return recent.filter((row) => row.correct).length / recent.length >= 0.9;
 }
 
+export function chartStats(answers: { question: { chartId?: string }; correct: boolean }[], chartId: string) {
+  const rows = answers.filter((answer) => answer.question?.chartId === chartId);
+  const correct = rows.filter((answer) => answer.correct).length;
+  return { total: rows.length, correct, accuracy: rows.length === 0 ? 0 : correct / rows.length };
+}
+
 export function hasDayRun(answers: { createdAt: Date; today?: boolean }[], days: number, perDay: number): boolean {
   const counts = new Map<string, number>();
   for (const answer of answers) {

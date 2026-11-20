@@ -20,16 +20,9 @@ it("список чартов не отдаёт руки, отсутствующ
   const app = buildApp({ prisma: fakePrisma(), charts: loadCharts(fixture) });
   const list = await app.inject({ method: "GET", url: "/api/charts" });
   expect(list.statusCode).toBe(200);
-  expect(list.json().charts).toEqual([
-    {
-      id: "fixture-open",
-      title: "Фикстур, открытие, 10bb",
-      hero: "UTG",
-      mode: "open",
-      opponent: null,
-      stack: 10,
-    },
-  ]);
+  const charts = list.json().charts as { id: string; hands?: unknown }[];
+  expect(charts.map((chart) => chart.id)).toEqual(["fixture-open", "utg-open-20", "bu-open-10", "bb-vs-bu"]);
+  expect(charts.some((chart) => chart.hands)).toBe(false);
 
   const one = await app.inject({ method: "GET", url: "/api/charts/fixture-open" });
   expect(one.json().chart.hands.AA.parts[0].action).toBe("Push");

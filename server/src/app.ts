@@ -3,7 +3,7 @@ import cors from "@fastify/cors";
 import Fastify, { type FastifyInstance } from "fastify";
 import type { PrismaClient } from "@prisma/client";
 import { loadCharts, summaries, type LoadedCharts } from "./charts.ts";
-import { achievementKeys, allEasyCleared, hardOpen, hasDayRun, lastThirtyAccurate, mediumOpen, statsFromAnswers, unresolvedMistakes, type AnswerRow } from "./progress.ts";
+import { achievementKeys, allEasyCleared, chartStats, hardOpen, hasDayRun, lastThirtyAccurate, mediumOpen, statsFromAnswers, unresolvedMistakes, type AnswerRow } from "./progress.ts";
 
 const cookieName = "holdem_player";
 
@@ -189,6 +189,40 @@ export function buildApp({ prisma, charts }: Deps): FastifyInstance {
       orderBy: { unlockedAt: "asc" },
     });
     return { achievements: rows.map((row) => row.key) };
+  });
+
+  app.get("/api/saved", async (request) => {
+    const playerId = request.cookies[cookieName]!;
+    const [saved, answers] = await Promise.all([
+      prisma.savedDrill.findMany({ where: { playerId }, orderBy: { createdAt: "asc" } }),
+      prisma.answer.findMany({ where: { playerId, drillId: "ranges" } }),
+    ]);
+    return {
+      saved: saved.map((row) => ({
+        id: row.id,
+        name: row.name,
+        chartId: row.chartId,
+        ...chartStats(
+          answers.map((answer) => ({ question: answer.question as { chartId?: string }, correct: answer.correct })),
+          row.chartId,
+        ),
+      })),
+    };
+  });
+
+  app.post("/api/saved", async (request, reply) => {
+    const playerId = request.cookies[cookieName]!;
+    const body = request.body as { name?: string; chartId?: string };
+    const name = body.name?.trim();
+    if (!name || !body.chartId) return reply.code(400).send({ error: "Неполный набор" });
+    if (!loaded.ok) return reply.code(503).send({ error: loaded.error });
+    if (!loaded.byId.has(body.chartId)) return reply.code(404).send({ error: "Спот не найден" });
+    const saved = await prisma.savedDrill.upsert({
+      where: { playerId_chartId: { playerId, chartId: body.chartId } },
+      update: { name },
+      create: { playerId, name, chartId: body.chartId },
+    });
+    return { id: saved.id, name: saved.name, chartId: saved.chartId };
   });
 
   app.get("/api/pairs", async (request) => {

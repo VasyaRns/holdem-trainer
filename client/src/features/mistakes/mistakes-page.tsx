@@ -115,8 +115,24 @@ export function MistakesPage() {
       </section>
     );
   }
-  if (!item || !question || !sessionId) return <p className="text-muted-foreground">Ждём сессию…</p>;
+    if (!item) return <p className="text-muted-foreground">Ждём сессию…</p>;
+    if (item.drillId === "ranges") {
+      const [chartId, handName] = item.key.split(":");
+      return (
+        <section className="space-y-4">
+          <h1 className="text-3xl tracking-tight">Повторить ошибки</h1>
+          <p>Рука {handName || item.key} из чарта.</p>
+          {chartId ? (
+            <Link className="text-primary" to={`/ranges/${chartId}`}>
+              Открыть спот
+            </Link>
+          ) : null}
+          <Button onClick={() => setCursor((value) => value + 1)}>Дальше</Button>
+        </section>
+      );
+    }
 
+  if (!question || !sessionId) return <p className="text-muted-foreground">Ждём сессию…</p>;
   const drill = findDrill(item.drillId);
   const level = knownLevel(item.level);
   if (!drill || !level) return <p className="text-muted-foreground">Ждём сессию…</p>;

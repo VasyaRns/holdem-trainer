@@ -154,31 +154,31 @@ todos:
     status: completed
   - id: ranges-import
     content: "Диапазоны 6.1: клиент берёт список спотов и один чарт с API"
-    status: pending
+    status: completed
   - id: ranges-grade
     content: "Диапазоны 6.2: фолд, чистое действие и наибольший вес"
-    status: pending
+    status: completed
   - id: ranges-easy
     content: "Диапазоны 6.3: простой уровень"
-    status: pending
+    status: completed
   - id: ranges-medium
     content: "Диапазоны 6.4: средний уровень"
-    status: pending
+    status: completed
   - id: ranges-hard
     content: "Диапазоны 6.5: сложный уровень — действие и доля с шагом 10 п.п."
-    status: pending
+    status: completed
   - id: ranges-empty
     content: "Диапазоны 6.6: пустой экран, если API не видит файл чартов"
-    status: pending
+    status: completed
   - id: ranges-orbit
     content: "Диапазоны 6.7: орбита — один стек, ответ за каждую позицию по кругу"
-    status: pending
+    status: completed
   - id: ranges-saved
     content: "Диапазоны 6.8: сохранённый набор, чарт в один клик и его статистика"
-    status: pending
+    status: completed
   - id: ranges-stacks
     content: "Диапазоны 6.9: экран сравнения одной руки на двух стеках"
-    status: pending
+    status: completed
   - id: pairs-deck
     content: "Пары 7.1: генератор колоды и подсчёт звёзд"
     status: pending
@@ -520,7 +520,7 @@ flowchart LR
 - 5.4 Достижения, которые API записал при выполнении условия.
 - 5.5 Экран прогресса, проверка в браузере. На нём объём «48/60», сколько сессий осталось до квоты и что попадёт в «Сегодня».
 
-### 6. Диапазоны
+### 6. Диапазоны — готово
 
 - 6.1 Клиент загружает список спотов и один чарт с API.
 - 6.2 Проверка ответа: нет клетки — фолд; чистая клетка — её действие; смешанная — действие с наибольшим весом.

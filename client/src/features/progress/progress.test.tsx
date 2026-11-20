@@ -1,3 +1,4 @@
+import { registry } from "@holdem/engine";
 import { cleanup, render, screen } from "@testing-library/react";
 import { createMemoryRouter, RouterProvider } from "react-router-dom";
 import { afterEach, expect, it, vi } from "vitest";
@@ -45,7 +46,7 @@ it("пустой список не выдумывает достижение", a
 it("показывает 48/60, одну сессию до квоты и сегодняшний уровень", async () => {
   mock(["first_session"], 48, 0.95);
   renderProgress();
-  expect(await screen.findAllByText(/48\/60/)).toHaveLength(7);
-  expect(screen.getAllByText(/ещё 1 сессия/)).toHaveLength(7);
+  expect(await screen.findAllByText(/48\/60/)).toHaveLength(registry.length);
+  expect(screen.getAllByText(/ещё 1 сессия/)).toHaveLength(registry.length);
   expect(screen.getByRole("link", { name: "Ауты, простой" })).toBeInTheDocument();
 });
