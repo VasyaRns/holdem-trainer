@@ -3,7 +3,7 @@ import { POSITIONS, type LevelId } from "@holdem/domain";
 const ACTION_RE =
   /^(?:push|open(?:[-\s]?\d+(?:\.\d+)?bb)?|limp|raise(?:[-\s]?\d+(?:\.\d+)?bb)?|call|3bet(?:\s+\d+\s*-\s*\d+bb)?|raise\/3bet)$/i;
 
-export type ChartPart = { action: string; weight: number };
+export type ChartPart = { action: string; weight: number; color?: string };
 
 export type ChartHands = Record<string, { parts: ChartPart[] }>;
 

@@ -10,7 +10,7 @@ export type ChartSummary = {
 };
 
 export type ChartHand = {
-  parts: { action: string; weight: number }[];
+  parts: { action: string; weight: number; color?: string }[];
 };
 
 export type Chart = ChartSummary & {

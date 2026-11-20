@@ -17,6 +17,8 @@ export { alpha, minimumDefenseFrequency, stackToPot } from "./defense.ts";
 export { findDrill, registry } from "./registry.ts";
 export { allHands, chartAnswer, gradeChart, gradeRange, isActionLabel, orbitOrder, orbitQuestion, questionFromChart, BUCKET_LABELS } from "./ranges.ts";
 export type { ChartHands, ChartPart, RangeChart, RangeQuestion } from "./ranges.ts";
+export { buildPairsDeck, scorePairs, PAIRS_TABLE } from "./pairs.ts";
+export type { PairCard, PairSide, PairsDeck, PairsScore } from "./pairs.ts";
 export { afterAnswer } from "./drills/make.ts";
 export type { RepeatTrack } from "./drills/make.ts";
 export type { DrillModule, Grade, Question } from "./drill.ts";

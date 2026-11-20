@@ -31,6 +31,7 @@ it("каталог показывает ровно тренажёры из ре�
   renderCatalog();
 
   expect(screen.getByText("Тренажёр холдема")).toBeInTheDocument();
+  expect(screen.getByRole("link", { name: "Пары" })).toHaveAttribute("href", "/pairs");
   expect(await screen.findAllByRole("link", { name: "Простой" })).toHaveLength(registry.length);
   expect(screen.queryByRole("link", { name: "Средний" })).not.toBeInTheDocument();
   expect(screen.getAllByText("Средний")).toHaveLength(registry.length);

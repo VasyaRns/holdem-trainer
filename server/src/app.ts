@@ -179,7 +179,8 @@ export function buildApp({ prisma, charts }: Deps): FastifyInstance {
         passed: Boolean(body.passed),
       },
     });
-    return { id: game.id };
+    const unlocked = await grantAchievements(prisma, playerId);
+    return { id: game.id, unlocked };
   });
 
   app.get("/api/achievements", async (request) => {

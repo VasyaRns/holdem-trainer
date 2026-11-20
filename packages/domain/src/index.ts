@@ -1,7 +1,7 @@
 export { emptySpot, POSITIONS } from "./spot.ts";
 export type { Position, Spot, Street } from "./spot.ts";
 export type { ActionMix, ActionWeight, SolutionSource } from "./solution.ts";
-export { LEVELS, QUOTAS, sessionsLeft } from "./quota.ts";
+export { LEVELS, QUOTAS, PAIRS_QUOTAS, sessionsLeft, pairsLevelOpen } from "./quota.ts";
 export type { LevelId } from "./quota.ts";
 export { ARTICLES, findArticle } from "./guide.ts";
 export type { Article } from "./guide.ts";

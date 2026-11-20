@@ -44,6 +44,7 @@ it.skipIf(!databaseUrl)("сессия, ответ и партия пишутся
     payload: { level: "easy", chartId: "fixture-open", moves: 4, seconds: 12, stars: 3, passed: true },
   });
   expect(pairs.statusCode).toBe(200);
+  expect(pairs.json().unlocked).toContain("pairs_clean");
   const best = await app.inject({
     method: "GET",
     url: "/api/pairs?level=easy",

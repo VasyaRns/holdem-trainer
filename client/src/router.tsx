@@ -4,6 +4,7 @@ import { CatalogPage } from "@/features/catalog/catalog-page";
 import { ProgressPage } from "@/features/progress/progress-page";
 import { GuidePage } from "@/features/guide/guide-page";
 import { MistakesPage } from "@/features/mistakes/mistakes-page";
+import { PairsPage } from "@/features/pairs/pairs-page";
 import { RangePlayPage } from "@/features/ranges/play-page";
 import { RangesPage } from "@/features/ranges/ranges-page";
 import { StacksPage } from "@/features/ranges/stacks-page";
@@ -21,6 +22,8 @@ export const router = createBrowserRouter([
       { path: "guide", element: <GuidePage /> },
       { path: "ranges/play", element: <RangePlayPage /> },
       { path: "ranges/stacks", element: <StacksPage /> },
+      { path: "pairs", element: <PairsPage /> },
+      { path: "pairs/:chartId", element: <PairsPage /> },
       { path: "ranges", element: <RangesPage /> },
       { path: "ranges/:chartId", element: <RangesPage /> },
       { path: "train/:drillId", element: <SessionPage /> },

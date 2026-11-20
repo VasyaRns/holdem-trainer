@@ -181,19 +181,19 @@ todos:
     status: completed
   - id: pairs-deck
     content: "Пары 7.1: генератор колоды и подсчёт звёзд"
-    status: pending
+    status: completed
   - id: pairs-board
     content: "Пары 7.2: стол, превью и переворот рубашкой"
-    status: pending
+    status: completed
   - id: pairs-match
     content: "Пары 7.3: совпадение, закрытие чужой пары и конец партии"
-    status: pending
+    status: completed
   - id: pairs-levels
     content: "Пары 7.4: три размера стола, следующий после 12, 16 и 20 партий"
-    status: pending
+    status: completed
   - id: pairs-score
     content: "Пары 7.5: партия пишется в Postgres, экран показывает лучшие время и ходы"
-    status: pending
+    status: completed
   - id: docs-readme
     content: "Документы 8.1: README, Docker Compose, CHARTS_PATH и проверки"
     status: pending

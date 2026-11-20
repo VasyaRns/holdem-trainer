@@ -8,6 +8,18 @@ export const QUOTAS: Record<LevelId, { count: number; accuracy: number }> = {
   hard: { count: 100, accuracy: 0.8 },
 };
 
+export const PAIRS_QUOTAS: Record<LevelId, number> = {
+  easy: 12,
+  medium: 16,
+  hard: 20,
+};
+
+export function pairsLevelOpen(passed: Partial<Record<LevelId, number | null>>, level: LevelId): boolean {
+  if (level === "easy") return true;
+  if (level === "medium") return typeof passed.easy === "number" && passed.easy >= PAIRS_QUOTAS.easy;
+  return typeof passed.medium === "number" && passed.medium >= PAIRS_QUOTAS.medium;
+}
+
 export function sessionsLeft(total: number, level: LevelId, sitting = 20): number {
   return Math.ceil(Math.max(0, QUOTAS[level].count - total) / sitting);
 }

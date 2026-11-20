@@ -46,6 +46,9 @@ export function CatalogPage() {
         <Link className="text-primary" to="/ranges">
           Диапазоны
         </Link>
+        <Link className="text-primary" to="/pairs">
+          Пары
+        </Link>
         {saved.map((item) => (
           <Link key={item.id} className="text-primary" to={`/ranges/${item.chartId}`}>
             {item.name}
