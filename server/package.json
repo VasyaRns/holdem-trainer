@@ -1,0 +1,9 @@
+{
+  "name": "@holdem/server",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node --eval \"process.exit(0)\"",
+    "dev": "node --eval \"console.log('server starts in a later block')\""
+  }
+}
