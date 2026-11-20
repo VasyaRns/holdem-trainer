@@ -7,3 +7,7 @@ export const QUOTAS: Record<LevelId, { count: number; accuracy: number }> = {
   medium: { count: 80, accuracy: 0.85 },
   hard: { count: 100, accuracy: 0.8 },
 };
+
+export function sessionsLeft(total: number, level: LevelId, sitting = 20): number {
+  return Math.ceil(Math.max(0, QUOTAS[level].count - total) / sitting);
+}

@@ -65,6 +65,15 @@ export function gradeCard(card: Card, answer: unknown): Grade {
   };
 }
 
-export function afterAnswer(correct: boolean): { repeat: boolean } {
-  return { repeat: !correct };
+export type RepeatTrack = { missed: boolean; streak: number };
+
+export function afterAnswer(
+  correct: boolean,
+  track: RepeatTrack = { missed: false, streak: 0 },
+): { repeat: boolean; track: RepeatTrack } {
+  if (!correct) return { repeat: true, track: { missed: true, streak: 0 } };
+  if (!track.missed) return { repeat: false, track: { missed: false, streak: 0 } };
+  const streak = track.streak + 1;
+  if (streak >= 2) return { repeat: false, track: { missed: false, streak: 0 } };
+  return { repeat: true, track: { missed: true, streak } };
 }

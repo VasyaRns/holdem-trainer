@@ -1,0 +1,1 @@
+ALTER TABLE "Session" ADD COLUMN "today" BOOLEAN NOT NULL DEFAULT false;

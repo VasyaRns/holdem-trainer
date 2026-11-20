@@ -3,7 +3,7 @@ import cors from "@fastify/cors";
 import Fastify, { type FastifyInstance } from "fastify";
 import type { PrismaClient } from "@prisma/client";
 import { loadCharts, summaries, type LoadedCharts } from "./charts.ts";
-import { achievementKeys, unresolvedMistakes, type AnswerRow } from "./progress.ts";
+import { achievementKeys, allEasyCleared, hardOpen, hasDayRun, lastThirtyAccurate, mediumOpen, statsFromAnswers, unresolvedMistakes, type AnswerRow } from "./progress.ts";
 
 const cookieName = "holdem_player";
 
@@ -52,9 +52,9 @@ export function buildApp({ prisma, charts }: Deps): FastifyInstance {
 
   app.post("/api/sessions", async (request) => {
     const playerId = request.cookies[cookieName]!;
-    const body = request.body as { drillId?: string; level?: string };
+    const body = request.body as { drillId?: string; level?: string; today?: boolean };
     const session = await prisma.session.create({
-      data: { playerId, drillId: body.drillId ?? "", level: body.level ?? "easy" },
+      data: { playerId, drillId: body.drillId ?? "", level: body.level ?? "easy", today: Boolean(body.today) },
     });
     const unlocked = await grantAchievements(prisma, playerId);
     return { id: session.id, unlocked };
@@ -119,12 +119,19 @@ export function buildApp({ prisma, charts }: Deps): FastifyInstance {
     const mistakes = unresolvedMistakes(
       rows.map((row) => ({
         drillId: row.drillId,
+        level: row.level,
         correct: row.correct,
         question: row.question as AnswerRow["question"],
         createdAt: row.createdAt,
       })),
     );
-    return { mistakes };
+    return {
+      mistakes: mistakes.map((row) => ({
+        drillId: row.drillId,
+        level: row.level,
+        key: row.question.key ?? row.question.handId ?? "",
+      })),
+    };
   });
 
   app.get("/api/intros", async (request) => {
@@ -175,6 +182,15 @@ export function buildApp({ prisma, charts }: Deps): FastifyInstance {
     return { id: game.id };
   });
 
+  app.get("/api/achievements", async (request) => {
+    const playerId = request.cookies[cookieName]!;
+    const rows = await prisma.achievement.findMany({
+      where: { playerId },
+      orderBy: { unlockedAt: "asc" },
+    });
+    return { achievements: rows.map((row) => row.key) };
+  });
+
   app.get("/api/pairs", async (request) => {
     const playerId = request.cookies[cookieName]!;
     const { level } = request.query as { level?: string };
@@ -200,7 +216,7 @@ async function ensurePlayer(prisma: PrismaClient) {
 async function grantAchievements(prisma: PrismaClient, playerId: string) {
   const [sessionCount, answers] = await Promise.all([
     prisma.session.count({ where: { playerId } }),
-    prisma.answer.findMany({ where: { playerId }, orderBy: { createdAt: "desc" } }),
+    prisma.answer.findMany({ where: { playerId }, orderBy: { createdAt: "desc" }, include: { session: true } }),
   ]);
   let streak = 0;
   for (const answer of answers) {
@@ -212,10 +228,30 @@ async function grantAchievements(prisma: PrismaClient, playerId: string) {
     if (!answer.correct) continue;
     byDrill.set(answer.drillId, (byDrill.get(answer.drillId) ?? 0) + 1);
   }
+  const stats = statsFromAnswers(
+    answers.map((answer) => ({
+      drillId: answer.drillId,
+      level: answer.level,
+      correct: answer.correct,
+      question: answer.question as AnswerRow["question"],
+      createdAt: answer.createdAt,
+    })),
+  );
+  const pairsClean = await prisma.pairsGame.findFirst({ where: { playerId, level: "easy", stars: 3 } });
   const keys = achievementKeys({
     sessionCount,
     correctStreak: streak,
     maxCorrectInOneDrill: Math.max(0, ...byDrill.values()),
+    mediumOpen: mediumOpen(stats),
+    hardOpen: hardOpen(stats),
+    accurateThirty: lastThirtyAccurate(answers),
+    allEasyCleared: allEasyCleared(stats),
+    week: hasDayRun(
+      answers.map((answer) => ({ createdAt: answer.createdAt, today: answer.session.today })),
+      7,
+      20,
+    ),
+    pairsClean: Boolean(pairsClean),
   });
   const unlocked: string[] = [];
   for (const key of keys) {

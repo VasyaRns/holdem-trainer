@@ -3,9 +3,13 @@ import { afterAnswer } from "./make.ts";
 import { outs } from "./outs.ts";
 import { expect, it } from "vitest";
 
-it("после верного ответа берётся новый спот, после ошибки — тот же навык", () => {
-  expect(afterAnswer(false)).toEqual({ repeat: true });
-  expect(afterAnswer(true)).toEqual({ repeat: false });
+it("промахнутый шаблон возвращается, пока не будет двух верных подряд", () => {
+  const missed = afterAnswer(false);
+  expect(missed.repeat).toBe(true);
+  const once = afterAnswer(true, missed.track);
+  expect(once.repeat).toBe(true);
+  expect(afterAnswer(true, once.track).repeat).toBe(false);
+  expect(afterAnswer(true).repeat).toBe(false);
 });
 
 it("два простых флеш-дро отличаются текстом, ответ всё равно 9", () => {

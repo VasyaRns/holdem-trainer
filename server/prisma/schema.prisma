@@ -24,6 +24,7 @@ model Session {
   player     Player    @relation(fields: [playerId], references: [id])
   drillId    String
   level      String
+  today      Boolean   @default(false)
   startedAt  DateTime  @default(now())
   finishedAt DateTime?
   answers    Answer[]

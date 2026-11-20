@@ -1,11 +1,12 @@
 export { emptySpot, POSITIONS } from "./spot.ts";
 export type { Position, Spot, Street } from "./spot.ts";
 export type { ActionMix, ActionWeight, SolutionSource } from "./solution.ts";
-export { LEVELS, QUOTAS } from "./quota.ts";
+export { LEVELS, QUOTAS, sessionsLeft } from "./quota.ts";
 export type { LevelId } from "./quota.ts";
 export { ARTICLES, findArticle } from "./guide.ts";
 export type { Article } from "./guide.ts";
 export { TERMS, filterTerms } from "./terms.ts";
 export type { Term } from "./terms.ts";
-export { MATH_DRILLS, levelCleared, pickToday } from "./today.ts";
+export { MATH_DRILLS, levelCleared, levelOpen, pickToday } from "./today.ts";
 export type { LevelStat } from "./today.ts";
+export { ACHIEVEMENTS, achievementTitle } from "./achievements.ts";

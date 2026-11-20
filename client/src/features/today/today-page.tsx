@@ -1,25 +1,24 @@
-import { MATH_DRILLS, pickToday, type LevelId, type LevelStat } from "@holdem/domain";
+import { pickToday } from "@holdem/domain";
 import { findDrill } from "@holdem/engine";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getJson } from "../session/api";
-
-const levels: LevelId[] = ["easy", "medium", "hard"];
+import { loadMathStats } from "../session/api";
 
 export function TodayPage() {
   const [target, setTarget] = useState(pickToday([]));
+  const [failed, setFailed] = useState(false);
 
   useEffect(() => {
-    Promise.all(
-      MATH_DRILLS.flatMap((drillId) =>
-        levels.map(async (level) => {
-          const body = await getJson<{ total: number; accuracy: number }>(`/api/drills/${drillId}/levels/${level}`);
-          return { drillId, level, total: body.total, accuracy: body.accuracy };
-        }),
-      ),
-    )
-      .then((stats: LevelStat[]) => setTarget(pickToday(stats)))
-      .catch(() => setTarget(pickToday([])));
+    loadMathStats()
+      .then(({ stats, failed: missed }) => {
+        const loaded = [...new Set(stats.map((stat) => stat.drillId))];
+        setTarget(pickToday(stats, loaded.length > 0 ? loaded : undefined));
+        setFailed(missed);
+      })
+      .catch(() => {
+        setTarget(pickToday([]));
+        setFailed(true);
+      });
   }, []);
 
   const drill = findDrill(target.drillId);
@@ -29,7 +28,8 @@ export function TodayPage() {
       <p>
         {drill?.title ?? target.drillId}, уровень {target.level}
       </p>
-      <Link className="text-primary" to={`/train/${target.drillId}?level=${target.level}`}>
+      {failed ? <p className="text-muted-foreground">Часть прогресса не загрузилась.</p> : null}
+      <Link className="text-primary" to={`/train/${target.drillId}?level=${target.level}&today=1`}>
         Начать
       </Link>
     </section>

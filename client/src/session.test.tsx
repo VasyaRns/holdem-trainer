@@ -47,6 +47,55 @@ it("справочник объясняет ICM и не даёт трениро�
   expect(screen.queryByText("Бэкдор")).not.toBeInTheDocument();
 });
 
+it("если сессия не открылась, вопрос не начинается", async () => {
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async (url: string) => {
+      if (String(url).includes("/api/intros")) return new Response(JSON.stringify({ seen: true }), { status: 200 });
+      return new Response("нет", { status: 500 });
+    }),
+  );
+  renderAt("/train/outs?level=easy");
+  expect(await screen.findByText("Сессия не открылась.")).toBeInTheDocument();
+  expect(screen.queryByLabelText("Ответ")).not.toBeInTheDocument();
+});
+
+it("средний закрыт, пока простой не набрал квоту", async () => {
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async (url: string, init?: RequestInit) => {
+      if (String(url).includes("/api/intros") && init?.method !== "POST") {
+        return new Response(JSON.stringify({ seen: true }), { status: 200 });
+      }
+      if (String(url).includes("/levels/")) {
+        return new Response(JSON.stringify({ total: 12, count: 12, correct: 10, accuracy: 0.8 }), { status: 200 });
+      }
+      return new Response(JSON.stringify({ id: "session-1", unlocked: [] }), { status: 200 });
+    }),
+  );
+  renderAt("/train/outs?level=medium");
+  expect(await screen.findByText(/Сейчас 12\/60 и 80%/)).toBeInTheDocument();
+  expect(screen.queryByLabelText("Ответ")).not.toBeInTheDocument();
+});
+
+it("новое достижение остаётся на вопросе", async () => {
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async (url: string, init?: RequestInit) => {
+      if (String(url).includes("/api/intros") && init?.method !== "POST") {
+        return new Response(JSON.stringify({ seen: true }), { status: 200 });
+      }
+      if (String(url).includes("/api/sessions") && init?.method === "POST" && !String(url).includes("answers")) {
+        return new Response(JSON.stringify({ id: "session-1", unlocked: ["first_session"] }), { status: 200 });
+      }
+      return new Response(JSON.stringify({ id: "answer-1", unlocked: [] }), { status: 200 });
+    }),
+  );
+  renderAt("/train/outs?level=easy");
+  expect(await screen.findByText(/Первая сессия/)).toBeInTheDocument();
+  expect(await screen.findByLabelText("Ответ")).toBeInTheDocument();
+});
+
 it("неверный аут показывает формулу и остаётся на вопросе", async () => {
   renderAt("/train/outs?level=easy");
   const input = await screen.findByLabelText("Ответ");
