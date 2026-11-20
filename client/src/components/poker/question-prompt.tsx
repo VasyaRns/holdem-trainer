@@ -98,14 +98,14 @@ export function QuestionPrompt({ prompt }: { prompt: string }) {
   return (
     <div className="space-y-4">
       <div className="rounded-xl bg-background p-3 sm:p-4">
-        <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap">
-        {view.groups.map((group) => (
-          <CardRow key={group.label} label={group.label}>
-            {group.cards.map((card, index) => (
-              <PlayingCard key={`${group.label}-${card.rank}${card.suit}-${index}`} rank={card.rank} suit={card.suit} />
-            ))}
-          </CardRow>
-        ))}
+        <div className="flex flex-wrap items-end gap-x-8 gap-y-4">
+          {view.groups.map((group) => (
+            <CardRow key={group.label} label={group.label}>
+              {group.cards.map((card, index) => (
+                <PlayingCard key={`${group.label}-${card.rank}${card.suit}-${index}`} rank={card.rank} suit={card.suit} />
+              ))}
+            </CardRow>
+          ))}
         </div>
       </div>
       <h1 className="text-2xl leading-snug">{view.ask}</h1>
