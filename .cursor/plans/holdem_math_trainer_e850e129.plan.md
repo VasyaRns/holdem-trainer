@@ -25,118 +25,118 @@ todos:
     status: completed
   - id: engine-cards
     content: "Движок 2.1: колода, карты и имена рук"
-    status: in_progress
+    status: completed
   - id: engine-outs
     content: "Движок 2.2: ауты — чистое дро, блокеры и точный перебор"
-    status: pending
+    status: completed
   - id: engine-equity
     content: "Движок 2.3: правило 2 и 4 и точная эквити"
-    status: pending
+    status: completed
   - id: engine-pot-ev
     content: "Движок 2.4: пот-оддсы и EV колла"
-    status: pending
+    status: completed
   - id: engine-combos
     content: "Движок 2.5: комбинации с блокерами"
-    status: pending
+    status: completed
   - id: engine-mdf-spr
     content: "Движок 2.6: MDF, альфа и SPR"
-    status: pending
+    status: completed
   - id: server-compose
     content: "Сервер 3.1: Dockerfile API и web, docker-compose с Postgres, healthcheck"
-    status: pending
+    status: completed
   - id: server-schema
     content: "Сервер 3.2: схема Prisma — игрок, сессия, ответ, партия «Пар», достижение, просмотренный разбор"
-    status: pending
+    status: completed
   - id: server-boot
     content: "Сервер 3.3: Fastify, миграция при старте, /api/health, один локальный профиль"
-    status: pending
+    status: completed
   - id: server-charts
     content: "Сервер 3.4: список спотов и один чарт из CHARTS_PATH, без отдачи всего файла"
-    status: pending
+    status: completed
   - id: server-answers
     content: "Сервер 3.5: запись ответа и выборка последних 20 для уровня"
-    status: pending
+    status: completed
   - id: server-mistakes
     content: "Сервер 3.6: ошибки и достижения"
-    status: pending
+    status: completed
   - id: server-pairs
     content: "Сервер 3.7: запись партии «Пар» и лучшие время и ходы"
-    status: pending
+    status: completed
   - id: drill-session
     content: "Тренажёры 4.1: сессия одного уровня, счётчик квоты, формула, клавиатура, запись каждого ответа"
-    status: pending
+    status: completed
   - id: drill-outs-easy
     content: "Тренажёры 4.2: ауты, простой гринд, проверка в браузере"
-    status: pending
+    status: completed
   - id: drill-outs-medium
     content: "Тренажёры 4.3: ауты, средний гринд, проверка в браузере"
-    status: pending
+    status: completed
   - id: drill-outs-hard
     content: "Тренажёры 4.4: ауты, сложный гринд, проверка в браузере"
-    status: pending
+    status: completed
   - id: drill-rule-easy
     content: "Тренажёры 4.5: правило 2 и 4, простой гринд, проверка в браузере"
-    status: pending
+    status: completed
   - id: drill-rule-medium
     content: "Тренажёры 4.6: правило 2 и 4, средний гринд, проверка в браузере"
-    status: pending
+    status: completed
   - id: drill-rule-hard
     content: "Тренажёры 4.7: правило 2 и 4, сложный гринд, проверка в браузере"
-    status: pending
+    status: completed
   - id: drill-pot-easy
     content: "Тренажёры 4.8: пот-оддсы, простой гринд, проверка в браузере"
-    status: pending
+    status: completed
   - id: drill-pot-medium
     content: "Тренажёры 4.9: пот-оддсы, средний гринд, проверка в браузере"
-    status: pending
+    status: completed
   - id: drill-pot-hard
     content: "Тренажёры 4.10: пот-оддсы, сложный гринд, проверка в браузере"
-    status: pending
+    status: completed
   - id: drill-combos-easy
     content: "Тренажёры 4.11: комбинации, простой гринд, проверка в браузере"
-    status: pending
+    status: completed
   - id: drill-combos-medium
     content: "Тренажёры 4.12: комбинации, средний гринд, проверка в браузере"
-    status: pending
+    status: completed
   - id: drill-combos-hard
     content: "Тренажёры 4.13: комбинации, сложный гринд, проверка в браузере"
-    status: pending
+    status: completed
   - id: drill-ev-easy
     content: "Тренажёры 4.14: EV колла, простой гринд, проверка в браузере"
-    status: pending
+    status: completed
   - id: drill-ev-medium
     content: "Тренажёры 4.15: EV колла, средний гринд, проверка в браузере"
-    status: pending
+    status: completed
   - id: drill-ev-hard
     content: "Тренажёры 4.16: EV колла, сложный гринд, проверка в браузере"
-    status: pending
+    status: completed
   - id: drill-mdf-easy
     content: "Тренажёры 4.17: MDF и альфа, простой гринд, проверка в браузере"
-    status: pending
+    status: completed
   - id: drill-mdf-medium
     content: "Тренажёры 4.18: MDF и альфа, средний гринд, проверка в браузере"
-    status: pending
+    status: completed
   - id: drill-mdf-hard
     content: "Тренажёры 4.19: MDF и альфа, сложный гринд, проверка в браузере"
-    status: pending
+    status: completed
   - id: drill-spr-easy
     content: "Тренажёры 4.20: SPR, простой гринд, проверка в браузере"
-    status: pending
+    status: completed
   - id: drill-spr-medium
     content: "Тренажёры 4.21: SPR, средний гринд, проверка в браузере"
-    status: pending
+    status: completed
   - id: drill-spr-hard
     content: "Тренажёры 4.22: SPR, сложный гринд, проверка в браузере"
-    status: pending
+    status: completed
   - id: drill-example
     content: "Тренажёры 4.23: один разбор перед первым заходом на уровень, дальше скрыт"
-    status: pending
+    status: completed
   - id: drill-daily
     content: "Тренажёры 4.24: ежедневный заход, 20 вопросов с самого слабого незакрытого уровня"
-    status: pending
+    status: completed
   - id: guide-page
     content: "Тренажёры 4.25: справочник из трёх частей, статьи будущих режимов без кнопки тренировки"
-    status: pending
+    status: completed
   - id: progress-store
     content: "Прогресс 5.1: клиент API для сессий и ответов"
     status: pending
@@ -437,7 +437,7 @@ flowchart LR
 
 Девять крупных блоков. Блок для агента идёт первым: следующие подшаги пишутся уже по этим файлам. Внутри блока подшаги идут по порядку. Следующий подшаг не начинается, пока текущий не закрыт ревью. После последнего подшага блока работа останавливается. Следующий блок начинается только после сообщения «Дальше».
 
-### 0. Файлы для агента
+### 0. Файлы для агента — готово
 
 Пишутся до кода. Коротко, со ссылкой на путь, без пересказа всего плана.
 
@@ -452,14 +452,14 @@ flowchart LR
   - `add-term`: поля `id`, `title`, `text`, `group`, якорь и проверка фильтра.
   - `check-formulas`: сверить справочник с фикстурой. Флеш-дро 9, бэкдор около 4%. Девять аутов: правило 36, точно 35. Пот-бет: пот-оддсы 33, MDF 50, альфа 50. Полпота: 25, 67 и 33. Пара при одном тузе — 3 комбо. AA против KK — 81,9%.
 
-### 1. Каркас
+### 1. Каркас — готово
 
 - 1.1 Workspaces `client`, `server`, `packages/domain`, `packages/engine`. Скрипты `dev`, `test`, `build`. Пустой реестр тренажёров, тип спота с пустыми полями под ICM и интерфейс `SolutionSource`. Tailwind и shadcn в клиенте.
 - 1.2 Токены, оболочка, типографика: бумажный фон, тёмный текст, зелёный акцент, `tabular-nums`.
 - 1.3 Маршруты каталога, прогресса и пустого экрана тренажёра.
 - 1.4 Vitest и один дымовой тест.
 
-### 2. Движок
+### 2. Движок — готово
 
 Пакет `packages/engine`: чистые функции и фикстуры, без экрана. Его импортируют клиент и API. Контрольные числа, с ними сверяется и справочник: флеш-дро = 9, бэкдорное флеш-дро около 4%, не 9. Девять аутов на две карты из 47 — 35%, правило даёт 36. Пот-бет: пот-оддсы 33%, MDF 50%, альфа 50%. Полпота: пот-оддсы 25%, MDF 67%, альфа 33%. AA против KK префлоп — 81,9% эквити, ничья делится пополам. Пара тузов при одном видимом тузе — 3 комбо.
 
@@ -470,7 +470,7 @@ flowchart LR
 - 2.5 Комбинации с блокерами.
 - 2.6 MDF, альфа и SPR.
 
-### 3. Сервер и Docker
+### 3. Сервер и Docker — готово
 
 - 3.1 `Dockerfile` для API и nginx-образ для `web`, `docker-compose.yml` с `postgres`, `api`, `web`, томом `pgdata`, healthcheck базы. `.env.example` с локальным `DATABASE_URL` и `CHARTS_PATH`.
 - 3.2 Схема Prisma: `Player`, `Session`, `Answer` (общий JSON вопроса и ответа, без колонки на каждый тренажёр), `PairsGame`, `Achievement`, `LevelIntro`. Индекс последних 20 по игроку, тренажёру, уровню и времени. Миграция.
@@ -482,7 +482,7 @@ flowchart LR
 
 Маршруты без базы проверяются через `inject`. Маршруты с записью — на Postgres из compose. Подшаг 3.1 считается проверенным, когда `docker compose up --build` поднимает три сервиса и `/api/health` отвечает.
 
-### 4. Математические тренажёры
+### 4. Математические тренажёры — готово
 
 Каждый уровень — свой подшаг. В подшаге генератор этого уровня, квота и короткий проход в браузере, не все 60–100 вопросов.
 
