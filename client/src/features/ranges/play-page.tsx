@@ -3,6 +3,7 @@ import { BUCKET_LABELS, allHands, gradeRange, orbitQuestion, questionFromChart, 
 import { useEffect, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { openSession, saveAnswer, loadLevel } from "../session/api";
 import { chartError, loadChart, loadChartList, type ChartSummary } from "./api";
 
@@ -149,7 +150,7 @@ export function RangePlayPage() {
       <section className="space-y-4">
         <h1 className="text-3xl tracking-tight">Орбита</h1>
         <p>Один стек, та же рука в чарте открытия каждой позиции. Ответы пишутся в простой уровень.</p>
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3">
           {stacks.map((item) => (
             <Button key={item} onClick={() => setStack(item)}>
               {item}bb
@@ -201,42 +202,44 @@ export function RangePlayPage() {
   const label = (choice: string) => (question.kind === "bucket" ? BUCKET_LABELS[choice] ?? choice : choice === "fold" ? "Фолд" : choice);
 
   return (
-    <section className="space-y-6">
+    <section className="mx-auto max-w-2xl space-y-6">
       <p className="num text-sm text-muted-foreground">
         Диапазоны · {Math.min(answered + 1, 20)}/20{level === "orbit" ? ` · ${question.hero}` : ""}
       </p>
-      <h1 className="text-2xl leading-snug">{question.prompt}</h1>
-      {miss ? (
-        <form
-          className="space-y-4"
-          onSubmit={(event) => {
-            event.preventDefault();
-            if (answered >= 20) setDone(true);
-            else setMiss("");
-          }}
-        >
-          <p className="text-miss">Мимо. {miss}</p>
-          <Button type="submit">Дальше</Button>
-        </form>
-      ) : pending ? (
-        <div className="flex flex-wrap gap-2">
-          {STEPS.map((item) => (
-            <Button key={item} onClick={() => submit(pending, item)}>
-              {item}%
-            </Button>
-          ))}
-        </div>
-      ) : (
-        <div className="flex flex-wrap gap-3">
-          {question.choices.map((choice) => (
-            <Button key={choice} onClick={() => (question.kind === "mixed" ? setPending(choice) : submit(choice))}>
-              {label(choice)}
-            </Button>
-          ))}
-        </div>
-      )}
+      <Card className="space-y-6 p-4 sm:p-6">
+        <h1 className="text-2xl leading-snug">{question.prompt}</h1>
+        {miss ? (
+          <form
+            className="space-y-4"
+            onSubmit={(event) => {
+              event.preventDefault();
+              if (answered >= 20) setDone(true);
+              else setMiss("");
+            }}
+          >
+            <p className="rounded-lg border border-miss/30 bg-miss/10 px-4 py-3 text-miss">Мимо. {miss}</p>
+            <Button type="submit">Дальше</Button>
+          </form>
+        ) : pending ? (
+          <div className="flex flex-wrap gap-2">
+            {STEPS.map((item) => (
+              <Button key={item} onClick={() => submit(pending, item)}>
+                {item}%
+              </Button>
+            ))}
+          </div>
+        ) : (
+          <div className="flex flex-wrap gap-3">
+            {question.choices.map((choice) => (
+              <Button key={choice} onClick={() => (question.kind === "mixed" ? setPending(choice) : submit(choice))}>
+                {label(choice)}
+              </Button>
+            ))}
+          </div>
+        )}
+      </Card>
       {notice ? <p>{notice}</p> : null}
-      <Link className="text-primary" to="/ranges">
+      <Link className="inline-flex min-h-11 items-center text-primary" to="/ranges">
         К списку спотов
       </Link>
     </section>

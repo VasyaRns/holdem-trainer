@@ -117,7 +117,7 @@ export function PairsTable({
           Звёзды: {score.stars}. {score.passed ? "Зачтена" : "Не зачтена"}
         </p>
       ) : null}
-      <ul className="grid grid-cols-4 gap-3">
+      <ul className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
         {deck.cards.map((card) => {
           const show = visible(card);
           const color = show ? card.color : null;
@@ -132,8 +132,8 @@ export function PairsTable({
                 onClick={() => openCard(card)}
                 className={
                   show
-                    ? "flex min-h-16 w-full items-center justify-center rounded-xl border border-border bg-card px-2 text-center"
-                    : "flex min-h-16 w-full items-center justify-center rounded-xl bg-primary text-primary-foreground"
+                    ? "flex min-h-20 w-full items-center justify-center rounded-xl border border-border bg-card px-2 text-center text-base font-medium shadow-sm"
+                    : "flex min-h-20 w-full items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm"
                 }
                 style={color ? { boxShadow: `inset 0 0 0 3px ${color}` } : undefined}
               >

@@ -3,6 +3,10 @@ import { afterAnswer, findDrill, type Grade, type Question, type RepeatTrack } f
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { fieldClass } from "@/components/ui/field";
+import { Progress } from "@/components/ui/progress";
+import { cn } from "@/lib/utils";
 import { loadMistakes, openSession, saveAnswer, type Mistake } from "../session/api";
 
 const LEVELS: LevelId[] = ["easy", "medium", "hard"];
@@ -92,10 +96,12 @@ export function MistakesPage() {
     return (
       <section className="space-y-4">
         <h1 className="text-3xl tracking-tight">Повторить ошибки</h1>
-        <p>{mistakes.length === 0 ? "Открытых ошибок нет." : "Ошибки закрыты."}</p>
-        <Link className="text-primary" to="/">
-          В каталог
-        </Link>
+        <Card className="space-y-4 p-4">
+          <p>{mistakes.length === 0 ? "Открытых ошибок нет." : "Ошибки закрыты."}</p>
+          <Link className="inline-flex min-h-11 items-center text-primary" to="/">
+            В каталог
+          </Link>
+        </Card>
       </section>
     );
   }
@@ -119,15 +125,19 @@ export function MistakesPage() {
     if (item.drillId === "ranges") {
       const [chartId, handName] = item.key.split(":");
       return (
-        <section className="space-y-4">
+        <section className="mx-auto max-w-2xl space-y-4">
           <h1 className="text-3xl tracking-tight">Повторить ошибки</h1>
-          <p>Рука {handName || item.key} из чарта.</p>
-          {chartId ? (
-            <Link className="text-primary" to={`/ranges/${chartId}`}>
-              Открыть спот
-            </Link>
-          ) : null}
-          <Button onClick={() => setCursor((value) => value + 1)}>Дальше</Button>
+          <Card className="space-y-4 p-4">
+            <p>Рука {handName || item.key} из чарта.</p>
+            <div className="flex flex-wrap items-center gap-3">
+              {chartId ? (
+                <Link className="inline-flex min-h-11 items-center text-primary" to={`/ranges/${chartId}`}>
+                  Открыть спот
+                </Link>
+              ) : null}
+              <Button onClick={() => setCursor((value) => value + 1)}>Дальше</Button>
+            </div>
+          </Card>
         </section>
       );
     }
@@ -177,62 +187,67 @@ export function MistakesPage() {
   };
 
   return (
-    <section className="space-y-6">
-      <p className="num text-sm text-muted-foreground">
-        {drill.title} · ошибки {cursor + 1}/{mistakes.length}
-        {saved ? "" : " · ответ не записан"}
-      </p>
+    <section className="mx-auto max-w-2xl space-y-6">
+      <div className="space-y-2">
+        <p className="num text-sm text-muted-foreground">
+          {drill.title} · ошибки {cursor + 1}/{mistakes.length}
+          {saved ? "" : " · ответ не записан"}
+        </p>
+        <Progress value={((cursor + 1) / mistakes.length) * 100} label={`${drill.title}, ошибки ${cursor + 1} из ${mistakes.length}`} />
+      </div>
       {notices.length > 0 ? <p>Достижение: {notices.join(", ")}</p> : null}
-      <h1 className="text-2xl leading-snug">{question.prompt}</h1>
-      {grade ? (
-        <form
-          className="space-y-4"
-          onSubmit={(event) => {
-            event.preventDefault();
-            setGrade(null);
-            const nextQuestion = drill.generate(level, Math.random, item.key, question.prompt);
-            shownHand.current = nextQuestion.handId;
-            setSaved(true);
-            setQuestion(nextQuestion);
-            startedAt.current = Date.now();
-          }}
-        >
-          <p className="text-miss">Мимо. {grade.formula}</p>
-          <Button type="submit" autoFocus>
-            Дальше
-          </Button>
-        </form>
-      ) : payload.kind === "choice" ? (
-        <div className="flex gap-3">
-          <Button onClick={() => submit("call")}>Колл</Button>
-          <Button variant="quiet" onClick={() => submit("fold")}>
-            Фолд
-          </Button>
-        </div>
-      ) : payload.kind === "pair" ? (
-        <form
-          className="flex gap-3"
-          onSubmit={(event) => {
-            event.preventDefault();
-            submit(pair);
-          }}
-        >
-          <input className="num w-24 rounded-xl border border-border bg-card px-3 py-2" inputMode="numeric" value={pair[0]} onChange={(event) => setPair([event.target.value, pair[1] ?? ""])} aria-label="MDF" />
-          <input className="num w-24 rounded-xl border border-border bg-card px-3 py-2" inputMode="numeric" value={pair[1]} onChange={(event) => setPair([pair[0] ?? "", event.target.value])} aria-label="Альфа" />
-          <Button type="submit">Ответить</Button>
-        </form>
-      ) : (
-        <form
-          className="flex gap-3"
-          onSubmit={(event) => {
-            event.preventDefault();
-            submit(draft);
-          }}
-        >
-          <input className="num w-32 rounded-xl border border-border bg-card px-3 py-2 text-2xl" inputMode="decimal" autoFocus value={draft} onChange={(event) => setDraft(event.target.value)} aria-label="Ответ" />
-          <Button type="submit">Ответить</Button>
-        </form>
-      )}
+      <Card className="space-y-6 p-4 sm:p-6">
+        <h1 className="text-2xl leading-snug">{question.prompt}</h1>
+        {grade ? (
+          <form
+            className="space-y-4"
+            onSubmit={(event) => {
+              event.preventDefault();
+              setGrade(null);
+              const nextQuestion = drill.generate(level, Math.random, item.key, question.prompt);
+              shownHand.current = nextQuestion.handId;
+              setSaved(true);
+              setQuestion(nextQuestion);
+              startedAt.current = Date.now();
+            }}
+          >
+            <p className="rounded-lg border border-miss/30 bg-miss/10 px-4 py-3 text-miss">Мимо. {grade.formula}</p>
+            <Button type="submit" autoFocus>
+              Дальше
+            </Button>
+          </form>
+        ) : payload.kind === "choice" ? (
+          <div className="flex flex-wrap gap-3">
+            <Button onClick={() => submit("call")}>Колл</Button>
+            <Button variant="quiet" onClick={() => submit("fold")}>
+              Фолд
+            </Button>
+          </div>
+        ) : payload.kind === "pair" ? (
+          <form
+            className="flex flex-wrap items-center gap-3"
+            onSubmit={(event) => {
+              event.preventDefault();
+              submit(pair);
+            }}
+          >
+            <input className={cn(fieldClass, "num w-28")} inputMode="numeric" value={pair[0]} onChange={(event) => setPair([event.target.value, pair[1] ?? ""])} aria-label="MDF" />
+            <input className={cn(fieldClass, "num w-28")} inputMode="numeric" value={pair[1]} onChange={(event) => setPair([pair[0] ?? "", event.target.value])} aria-label="Альфа" />
+            <Button type="submit">Ответить</Button>
+          </form>
+        ) : (
+          <form
+            className="flex flex-wrap items-center gap-3"
+            onSubmit={(event) => {
+              event.preventDefault();
+              submit(draft);
+            }}
+          >
+            <input className={cn(fieldClass, "num w-full text-2xl sm:w-40")} inputMode="decimal" autoFocus value={draft} onChange={(event) => setDraft(event.target.value)} aria-label="Ответ" />
+            <Button type="submit">Ответить</Button>
+          </form>
+        )}
+      </Card>
     </section>
   );
 }

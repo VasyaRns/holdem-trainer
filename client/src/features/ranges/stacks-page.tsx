@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { chartAnswer, RANKS } from "@holdem/engine";
+import { Card } from "@/components/ui/card";
+import { fieldClass } from "@/components/ui/field";
+import { cn } from "@/lib/utils";
 import { chartError, loadChart, loadChartList, type ChartSummary } from "./api";
 
 function pocketKey(text: string): string {
@@ -112,7 +115,7 @@ export function StacksPage() {
         <div className="flex flex-wrap gap-3">
           <select
             aria-label="Позиция"
-            className="rounded-xl border border-border bg-card px-3 py-2"
+            className={cn(fieldClass, "min-w-28")}
             value={hero}
             onChange={(event) => {
               const next = event.target.value;
@@ -126,15 +129,15 @@ export function StacksPage() {
               <option key={item}>{item}</option>
             ))}
           </select>
-          <input aria-label="Рука" className="w-24 rounded-xl border border-border bg-card px-3 py-2" value={hand} onChange={(event) => setHand(event.target.value)} />
-          <select aria-label="Левый стек" className="rounded-xl border border-border bg-card px-3 py-2" value={left ?? ""} onChange={(event) => setLeft(Number(event.target.value))}>
+          <input aria-label="Рука" className={cn(fieldClass, "w-28")} value={hand} onChange={(event) => setHand(event.target.value)} />
+          <select aria-label="Левый стек" className={cn(fieldClass, "min-w-28")} value={left ?? ""} onChange={(event) => setLeft(Number(event.target.value))}>
             {stacks.map((item) => (
               <option key={item} value={item}>
                 {item}bb
               </option>
             ))}
           </select>
-          <select aria-label="Правый стек" className="rounded-xl border border-border bg-card px-3 py-2" value={right ?? ""} onChange={(event) => setRight(Number(event.target.value))}>
+          <select aria-label="Правый стек" className={cn(fieldClass, "min-w-28")} value={right ?? ""} onChange={(event) => setRight(Number(event.target.value))}>
             {stacks.map((item) => (
               <option key={item} value={item}>
                 {item}bb
@@ -144,13 +147,17 @@ export function StacksPage() {
         </div>
       ) : null}
       {fresh && labels ? (
-        <div className="grid grid-cols-2 gap-4">
-          <p className="num rounded-xl bg-card p-4">
-            {labels.left}bb · {shown(labels.leftAction)}
-          </p>
-          <p className="num rounded-xl bg-card p-4">
-            {labels.right}bb · {shown(labels.rightAction)}
-          </p>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <Card className="p-4">
+            <p className="num">
+              {labels.left}bb · {shown(labels.leftAction)}
+            </p>
+          </Card>
+          <Card className="p-4">
+            <p className="num">
+              {labels.right}bb · {shown(labels.rightAction)}
+            </p>
+          </Card>
         </div>
       ) : null}
       <Link className="text-primary" to="/ranges">

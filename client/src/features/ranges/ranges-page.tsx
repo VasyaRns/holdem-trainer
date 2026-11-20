@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { fieldClass } from "@/components/ui/field";
+import { PageHeader } from "@/components/ui/page-header";
+import { cn } from "@/lib/utils";
 import { chartError, loadChart, loadChartList, saveSet, type Chart, type ChartSummary } from "./api";
 
 export function RangesPage() {
@@ -53,27 +58,28 @@ export function RangesPage() {
   }, [chartId]);
 
   return (
-    <section className="space-y-6">
-      <h1 className="text-3xl tracking-tight">Диапазоны</h1>
-      {spots && spots.length > 0 ? (
-        <div className="flex flex-wrap gap-3 text-sm">
-          <Link className="text-primary" to="/ranges/play?level=easy">
-            Простой
-          </Link>
-          <Link className="text-primary" to="/ranges/play?level=medium">
-            Средний
-          </Link>
-          <Link className="text-primary" to="/ranges/play?level=hard">
-            Сложный
-          </Link>
-          <Link className="text-primary" to="/ranges/play?level=orbit">
-            Орбита
-          </Link>
-          <Link className="text-primary" to="/ranges/stacks">
-            Стеки
-          </Link>
-        </div>
-      ) : null}
+    <section className="space-y-8">
+      <PageHeader title="Диапазоны" lede="Споты приходят с сервера. Уровни игры те же, что в каталоге.">
+        {spots && spots.length > 0 ? (
+          <div className="flex flex-wrap gap-2">
+            <Link className="inline-flex min-h-11 items-center rounded-lg px-3 text-primary" to="/ranges/play?level=easy">
+              Простой
+            </Link>
+            <Link className="inline-flex min-h-11 items-center rounded-lg px-3 text-primary" to="/ranges/play?level=medium">
+              Средний
+            </Link>
+            <Link className="inline-flex min-h-11 items-center rounded-lg px-3 text-primary" to="/ranges/play?level=hard">
+              Сложный
+            </Link>
+            <Link className="inline-flex min-h-11 items-center rounded-lg px-3 text-primary" to="/ranges/play?level=orbit">
+              Орбита
+            </Link>
+            <Link className="inline-flex min-h-11 items-center rounded-lg px-3 text-primary" to="/ranges/stacks">
+              Стеки
+            </Link>
+          </div>
+        ) : null}
+      </PageHeader>
       {listError ? (
         <section className="space-y-3">
           <p>{listError}</p>
@@ -82,23 +88,25 @@ export function RangesPage() {
       ) : null}
       {spots === null && !listError ? <p className="text-muted-foreground">Загрузка…</p> : null}
       {spots?.length === 0 ? <p>Спотов нет.</p> : null}
-      <ul className="space-y-2">
+      <ul className="grid gap-3 md:grid-cols-2">
         {spots?.map((spot) => (
           <li key={spot.id}>
-            <Link className="text-primary" to={`/ranges/${spot.id}`}>
-              {spot.title}
-            </Link>
-            <span className="text-sm text-muted-foreground">
-              {" "}
-              · {spot.hero}
-              {spot.stack == null ? "" : ` · ${spot.stack}bb`}
-            </span>
+            <Card className="p-4">
+              <Link className="text-primary" to={`/ranges/${spot.id}`}>
+                {spot.title}
+              </Link>
+              <span className="text-sm text-muted-foreground">
+                {" "}
+                · {spot.hero}
+                {spot.stack == null ? "" : ` · ${spot.stack}bb`}
+              </span>
+            </Card>
           </li>
         ))}
       </ul>
       {chart ? (
         <form
-          className="space-y-3"
+          className="max-w-md space-y-3"
           onSubmit={(event) => {
             event.preventDefault();
             const name = setName.trim() || chart.title;
@@ -110,10 +118,8 @@ export function RangesPage() {
           <p className="num">
             {chart.title}. Рук в споте: {Object.keys(chart.hands).length}.
           </p>
-          <input className="w-full rounded-xl border border-border bg-card px-3 py-2" aria-label="Имя набора" value={setName} onChange={(event) => setSetName(event.target.value)} placeholder="Имя набора" />
-          <button className="rounded-xl bg-primary px-4 py-2 text-primary-foreground" type="submit">
-            Сохранить набор
-          </button>
+          <input className={cn(fieldClass, "w-full")} aria-label="Имя набора" value={setName} onChange={(event) => setSetName(event.target.value)} placeholder="Имя набора" />
+          <Button type="submit">Сохранить набор</Button>
           {savedNote ? <p>{savedNote}</p> : null}
         </form>
       ) : null}

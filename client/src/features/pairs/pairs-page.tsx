@@ -2,6 +2,7 @@ import { LEVELS, PAIRS_QUOTAS, achievementTitle, pairsLevelOpen, type LevelId } 
 import { buildPairsDeck, type PairsDeck, type RangeChart } from "@holdem/engine";
 import { useEffect, useRef, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
+import { Card } from "@/components/ui/card";
 import { chartError, loadChart, loadChartList, type Chart, type ChartSummary } from "../ranges/api";
 import { loadPairs, postPairs } from "./api";
 import { PairsTable, type PairsFinish } from "./pairs-table";
@@ -228,12 +229,12 @@ export function PairsPage() {
           const count = records?.[item]?.passedCount;
           const mark = typeof count === "number" ? ` ${count}/${PAIRS_QUOTAS[item]}` : "";
           return open ? (
-            <Link key={item} className={item === level ? "text-primary" : "text-foreground"} to={href(item)}>
+            <Link key={item} className={item === level ? "inline-flex min-h-11 items-center rounded-lg bg-primary/10 px-3 text-primary" : "inline-flex min-h-11 items-center rounded-lg px-3"} to={href(item)}>
               {labels[item]}
               <span className="num">{mark}</span>
             </Link>
           ) : (
-            <span key={item} className="text-muted-foreground">
+            <span key={item} className="inline-flex min-h-11 items-center px-3 text-muted-foreground">
               {labels[item]}
             </span>
           );
@@ -243,7 +244,7 @@ export function PairsPage() {
       {saveError ? <p>{saveError}</p> : null}
       {saveError === "Партия не записалась." ? (
         <button
-          className="rounded-xl bg-primary px-4 py-2 text-primary-foreground"
+          className="inline-flex min-h-11 items-center rounded-lg bg-primary px-4 text-primary-foreground"
           type="button"
           onClick={() => {
             const payload = pending.current;
@@ -266,17 +267,19 @@ export function PairsPage() {
       {!chartId && spots === null && !listError ? <p className="text-muted-foreground">Загрузка…</p> : null}
       {!chartId && spots?.length === 0 ? <p>Спотов нет.</p> : null}
       {!chartId ? (
-        <ul className="space-y-2">
+        <ul className="grid gap-3 md:grid-cols-2">
           {spots?.map((spot) => (
             <li key={spot.id}>
-              <Link className="text-primary" to={`/pairs/${spot.id}?level=${level}`}>
-                {spot.title}
-              </Link>
-              <span className="text-sm text-muted-foreground">
-                {" "}
-                · {spot.hero}
-                {spot.stack == null ? "" : ` · ${spot.stack}bb`}
-              </span>
+              <Card className="p-4">
+                <Link className="text-primary" to={`/pairs/${spot.id}?level=${level}`}>
+                  {spot.title}
+                </Link>
+                <span className="text-sm text-muted-foreground">
+                  {" "}
+                  · {spot.hero}
+                  {spot.stack == null ? "" : ` · ${spot.stack}bb`}
+                </span>
+              </Card>
             </li>
           ))}
         </ul>
