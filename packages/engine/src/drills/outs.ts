@@ -1,14 +1,11 @@
+import { easyOuts } from "./variety.ts";
 import { winningOuts } from "../outs.ts";
 import { makeDrill } from "./make.ts";
 
 const exact = winningOuts(["Ah", "Kh"], ["2c", "3d"], ["Qh", "7h", "2s"]).length;
 
 export const outs = makeDrill("outs", "Ауты", "outs", {
-  easy: [
-    { key: "flush", kind: "number", expected: 9, formula: "Две карты в руке и две на борде одной масти: 13 − 4 = 9.", prompt: "Флеш-дро. Сколько аутов?" },
-    { key: "oesd", kind: "number", expected: 8, formula: "Двустороннее стрит-дро закрывают два ранга, по четыре карты: 8.", prompt: "Двустороннее стрит-дро. Сколько аутов?" },
-    { key: "gut", kind: "number", expected: 4, formula: "Гатшот закрывает один ранг: 4 карты.", prompt: "Гатшот. Сколько аутов?" },
-  ],
+  easy: easyOuts,
   medium: [
     {
       key: "flush-block",

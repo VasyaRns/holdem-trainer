@@ -20,7 +20,6 @@ export function SessionPage() {
   const [seen, setSeen] = useState<boolean | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [question, setQuestion] = useState<Question | null>(null);
-  const [streak, setStreak] = useState(0);
   const [answered, setAnswered] = useState(0);
   const [grade, setGrade] = useState<Grade | null>(null);
   const [draft, setDraft] = useState("");
@@ -77,10 +76,9 @@ export function SessionPage() {
   if (!question) return <p className="text-muted-foreground">Ждём сессию…</p>;
 
   const payload = question.payload as CardPayload;
-  const finish = (nextGrade: Grade, repeat: boolean, nextStreak: number) => {
+  const finish = (nextGrade: Grade, repeat: boolean) => {
     const count = answered + 1;
     setAnswered(count);
-    setStreak(nextStreak);
     setDraft("");
     setPair(["", ""]);
     if (count >= SITTING) {
@@ -92,12 +90,12 @@ export function SessionPage() {
       return;
     }
     setGrade(null);
-    setQuestion(drill.generate(level, Math.random, repeat ? payload.key : undefined));
+    setQuestion(drill.generate(level, Math.random, repeat ? payload.key : undefined, question.prompt));
   };
 
   const submit = (answer: unknown) => {
     const nextGrade = drill.grade(question, answer);
-    const next = afterAnswer(streak, nextGrade.correct);
+    const next = afterAnswer(nextGrade.correct);
     if (sessionId) {
       void postJson(`/api/sessions/${sessionId}/answers`, {
         question: { key: payload.key, handId: question.handId },
@@ -106,13 +104,13 @@ export function SessionPage() {
         durationMs: 0,
       }).catch(() => setSaved(false));
     }
-    finish(nextGrade, next.repeat, next.streak);
+    finish(nextGrade, next.repeat);
   };
 
   const continueAfterMiss = () => {
     setGrade(null);
     if (answered >= SITTING) return;
-    setQuestion(drill.generate(level, Math.random, payload.key));
+    setQuestion(drill.generate(level, Math.random, payload.key, question.prompt));
   };
 
   return (

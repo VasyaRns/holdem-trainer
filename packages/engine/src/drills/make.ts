@@ -20,11 +20,13 @@ export function makeDrill(
     title,
     articleId,
     levels: ["easy", "medium", "hard"],
-    generate(level, random = Math.random, key) {
+    generate(level, random = Math.random, key, avoidPrompt) {
       const pool = pools[level];
       const matching = key ? pool.filter((card) => card.key === key) : pool;
       const source = matching.length > 0 ? matching : pool;
-      const picked = source[Math.floor(random() * source.length)]!;
+      const fresh = source.filter((card) => card.prompt !== avoidPrompt);
+      const pile = fresh.length > 0 ? fresh : source;
+      const picked = pile[Math.floor(random() * pile.length)]!;
       return {
         handId: crypto.randomUUID(),
         prompt: picked.prompt,
@@ -63,8 +65,6 @@ export function gradeCard(card: Card, answer: unknown): Grade {
   };
 }
 
-export function afterAnswer(streak: number, correct: boolean): { streak: number; repeat: boolean } {
-  if (!correct) return { streak: 0, repeat: true };
-  const next = streak + 1;
-  return { streak: next >= 2 ? 0 : next, repeat: next < 2 };
+export function afterAnswer(correct: boolean): { repeat: boolean } {
+  return { repeat: !correct };
 }

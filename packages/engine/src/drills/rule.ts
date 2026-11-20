@@ -1,10 +1,8 @@
+import { easyRule } from "./variety.ts";
 import { makeDrill } from "./make.ts";
 
 export const rule = makeDrill("rule", "Правило 2 и 4", "rule", {
-  easy: [
-    { key: "nine-both", kind: "number", expected: 36, formula: "Обе карты видны за эту цену: 9 × 4 = 36.", prompt: "9 аутов, оппонент в олл-ине на флопе. Процент по правилу?" },
-    { key: "nine-one", kind: "number", expected: 18, formula: "Осталась одна карта: 9 × 2 = 18.", prompt: "9 аутов, ход на терне. Процент по правилу?" },
-  ],
+  easy: easyRule,
   medium: [
     { key: "flop-not-allin", kind: "number", expected: 18, formula: "На флопе впереди ещё ставка терна, оплачена одна карта: 9 × 2 = 18.", prompt: "Флоп, впереди ещё ставка терна, 9 аутов. Процент по правилу?" },
   ],
