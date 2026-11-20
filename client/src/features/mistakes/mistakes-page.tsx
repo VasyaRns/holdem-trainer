@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { fieldClass } from "@/components/ui/field";
+import { QuestionPrompt } from "@/components/poker/question-prompt";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { loadMistakes, openSession, saveAnswer, type Mistake } from "../session/api";
@@ -197,7 +198,7 @@ export function MistakesPage() {
       </div>
       {notices.length > 0 ? <p>Достижение: {notices.join(", ")}</p> : null}
       <Card className="space-y-6 p-4 sm:p-6">
-        <h1 className="text-2xl leading-snug">{question.prompt}</h1>
+        <QuestionPrompt prompt={question.prompt} />
         {grade ? (
           <form
             className="space-y-4"

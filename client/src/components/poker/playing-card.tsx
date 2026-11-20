@@ -29,16 +29,17 @@ export function PlayingCard({ rank, suit, faceDown = false }: PlayingCardProps) 
     );
   }
   const meta = suits[suit];
+  const face = rank.toUpperCase() === "T" ? "10" : rank;
   return (
     <span
       role="img"
-      aria-label={`${rank} ${meta.name}`}
+      aria-label={`${face} ${meta.name}`}
       className={cn(
         "inline-flex h-16 w-11 shrink-0 flex-col justify-between rounded-md border border-border bg-card px-1 py-1 shadow-sm",
         meta.red ? "text-suit-red" : "text-foreground",
       )}
     >
-      <span className="text-sm font-semibold leading-none">{rank}</span>
+      <span className={face === "10" ? "text-xs font-semibold leading-none" : "text-sm font-semibold leading-none"}>{face}</span>
       <span aria-hidden className="self-end text-lg leading-none">
         {meta.symbol}
       </span>

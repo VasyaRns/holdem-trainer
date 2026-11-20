@@ -2,6 +2,7 @@ import { levelOpen, POSITIONS, type LevelId } from "@holdem/domain";
 import { BUCKET_LABELS, allHands, gradeRange, orbitQuestion, questionFromChart, type RangeChart, type RangeQuestion } from "@holdem/engine";
 import { useEffect, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import { QuestionPrompt } from "@/components/poker/question-prompt";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { openSession, saveAnswer, loadLevel } from "../session/api";
@@ -207,7 +208,7 @@ export function RangePlayPage() {
         Диапазоны · {Math.min(answered + 1, 20)}/20{level === "orbit" ? ` · ${question.hero}` : ""}
       </p>
       <Card className="space-y-6 p-4 sm:p-6">
-        <h1 className="text-2xl leading-snug">{question.prompt}</h1>
+        <QuestionPrompt prompt={question.prompt} />
         {miss ? (
           <form
             className="space-y-4"
