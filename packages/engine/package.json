@@ -6,10 +6,15 @@
     ".": "./src/index.ts"
   },
   "dependencies": {
-    "@holdem/domain": "*"
+    "@holdem/domain": "*",
+    "pokersolver": "^2.1.4"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json --noEmit",
-    "test": "tsc -p tsconfig.json --noEmit"
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "vitest": "^3.2.4",
+    "@types/node": "^24.10.1"
   }
 }
