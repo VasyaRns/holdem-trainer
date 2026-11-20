@@ -17,6 +17,9 @@ export function Shell() {
             <NavLink to="/progress" className={linkClass}>
               Прогресс
             </NavLink>
+            <NavLink to="/guide" className={linkClass}>
+              Справочник
+            </NavLink>
           </nav>
         </div>
       </header>

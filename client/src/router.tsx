@@ -2,7 +2,9 @@ import { createBrowserRouter } from "react-router-dom";
 import { Shell } from "@/components/shell";
 import { CatalogPage } from "@/features/catalog/catalog-page";
 import { ProgressPage } from "@/features/progress/progress-page";
-import { EmptyTrainPage } from "@/features/session/empty-train-page";
+import { GuidePage } from "@/features/guide/guide-page";
+import { SessionPage } from "@/features/session/session-page";
+import { TodayPage } from "@/features/today/today-page";
 
 export const router = createBrowserRouter([
   {
@@ -10,7 +12,9 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <CatalogPage /> },
       { path: "progress", element: <ProgressPage /> },
-      { path: "train/:drillId", element: <EmptyTrainPage /> },
+      { path: "today", element: <TodayPage /> },
+      { path: "guide", element: <GuidePage /> },
+      { path: "train/:drillId", element: <SessionPage /> },
     ],
   },
 ]);

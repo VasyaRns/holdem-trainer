@@ -93,13 +93,21 @@ export function buildApp({ prisma, charts }: Deps): FastifyInstance {
   app.get("/api/drills/:drillId/levels/:level", async (request) => {
     const playerId = request.cookies[cookieName]!;
     const { drillId, level } = request.params as { drillId: string; level: string };
-    const recent = await prisma.answer.findMany({
-      where: { playerId, drillId, level },
-      orderBy: { createdAt: "desc" },
-      take: 20,
-    });
+    const [total, recent] = await Promise.all([
+      prisma.answer.count({ where: { playerId, drillId, level } }),
+      prisma.answer.findMany({
+        where: { playerId, drillId, level },
+        orderBy: { createdAt: "desc" },
+        take: 20,
+      }),
+    ]);
     const correct = recent.filter((row) => row.correct).length;
-    return { count: recent.length, correct, accuracy: recent.length === 0 ? 0 : correct / recent.length };
+    return {
+      total,
+      count: recent.length,
+      correct,
+      accuracy: recent.length === 0 ? 0 : correct / recent.length,
+    };
   });
 
   app.get("/api/mistakes", async (request) => {
@@ -117,6 +125,27 @@ export function buildApp({ prisma, charts }: Deps): FastifyInstance {
       })),
     );
     return { mistakes };
+  });
+
+  app.get("/api/intros", async (request) => {
+    const playerId = request.cookies[cookieName]!;
+    const { drillId, level } = request.query as { drillId?: string; level?: string };
+    if (!drillId || !level) return { seen: false };
+    const intro = await prisma.levelIntro.findUnique({
+      where: { playerId_drillId_level: { playerId, drillId, level } },
+    });
+    return { seen: Boolean(intro) };
+  });
+
+  app.post("/api/intros", async (request, reply) => {
+    const playerId = request.cookies[cookieName]!;
+    const body = request.body as { drillId?: string; level?: string };
+    if (!body.drillId || !body.level) return reply.code(400).send({ error: "Неполный разбор" });
+    await prisma.levelIntro.createMany({
+      data: [{ playerId, drillId: body.drillId, level: body.level }],
+      skipDuplicates: true,
+    });
+    return { seen: true };
   });
 
   app.post("/api/pairs", async (request, reply) => {

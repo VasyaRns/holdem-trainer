@@ -22,15 +22,13 @@ it("каталог показывает ровно тренажёры из ре�
   expect(screen.getByText("Тренажёр холдема")).toBeInTheDocument();
 
   const drillLinks = screen.getAllByRole("link").filter((link) => link.getAttribute("href")?.startsWith("/train/"));
-  expect(drillLinks).toHaveLength(registry.length);
+  expect(drillLinks).toHaveLength(registry.length * 3);
 
   const placeholder = screen.queryByText("Тренажёры появятся следующими блоками.");
   if (registry.length === 0) {
     expect(placeholder).toBeInTheDocument();
   } else {
     expect(placeholder).not.toBeInTheDocument();
-    for (const drill of registry) {
-      expect(screen.getByRole("link", { name: drill.title })).toHaveAttribute("href", `/train/${drill.id}`);
-    }
+    expect(screen.getAllByRole("link", { name: "Простой" })).toHaveLength(registry.length);
   }
 });

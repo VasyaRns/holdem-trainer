@@ -19,6 +19,6 @@ export type DrillModule = {
   title: string;
   levels: LevelId[];
   articleId: string;
-  generate: (level: LevelId, random?: () => number) => Question;
+  generate: (level: LevelId, random?: () => number, key?: string) => Question;
   grade: (question: Question, answer: unknown) => Grade;
 };
