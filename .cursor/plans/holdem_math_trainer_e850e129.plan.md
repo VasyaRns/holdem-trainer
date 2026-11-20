@@ -25,7 +25,7 @@ todos:
     status: completed
   - id: engine-cards
     content: "Движок 2.1: колода, карты и имена рук"
-    status: pending
+    status: in_progress
   - id: engine-outs
     content: "Движок 2.2: ауты — чистое дро, блокеры и точный перебор"
     status: pending
