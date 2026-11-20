@@ -12,8 +12,8 @@ export type Suit = keyof typeof suits;
 type CardSize = "sm" | "md";
 
 const sizeClass: Record<CardSize, string> = {
-  sm: "h-[4.25rem] w-12",
-  md: "h-24 w-16",
+  sm: "h-16 w-11",
+  md: "h-20 w-14",
 };
 
 function SuitMark({ suit, className, ...props }: { suit: Suit } & SVGProps<SVGSVGElement>) {
@@ -72,8 +72,8 @@ export function PlayingCard({ rank, suit, faceDown = false, size = "md" }: Playi
   }
   const meta = suits[suit];
   const face = rank.toUpperCase() === "T" ? "10" : rank;
-  const pip = size === "sm" ? "h-6 w-6" : "h-8 w-8";
-  const index = size === "sm" ? "h-3 w-3" : "h-3.5 w-3.5";
+  const pip = size === "sm" ? "h-5 w-5" : "h-7 w-7";
+  const index = size === "sm" ? "h-2.5 w-2.5" : "h-3 w-3";
   return (
     <span
       role="img"
@@ -84,12 +84,16 @@ export function PlayingCard({ rank, suit, faceDown = false, size = "md" }: Playi
         meta.red ? "text-suit-red" : "text-foreground",
       )}
     >
-      <span aria-hidden className="absolute left-1.5 top-1.5 flex flex-col items-center leading-none">
-        <span className={size === "sm" ? "text-xs font-semibold" : "text-base font-semibold"}>{face}</span>
+      <span className="absolute left-1 top-1 flex flex-col items-center leading-none">
+        <span className={size === "sm" ? "text-[11px] font-semibold" : "text-sm font-semibold"}>{face}</span>
         <SuitMark suit={suit} className={index} />
       </span>
-      <span aria-hidden className="absolute inset-0 flex items-center justify-center">
+      <span className="absolute inset-0 flex items-center justify-center">
         <SuitMark suit={suit} className={pip} />
+      </span>
+      <span className="absolute bottom-1 right-1 flex rotate-180 flex-col items-center leading-none">
+        <span className={size === "sm" ? "text-[11px] font-semibold" : "text-sm font-semibold"}>{face}</span>
+        <SuitMark suit={suit} className={index} />
       </span>
     </span>
   );
@@ -99,7 +103,7 @@ export function CardRow({ label, children }: { label: string; children: ReactNod
   return (
     <div className="min-w-0 space-y-2">
       <p className="text-sm text-muted-foreground">{label}</p>
-      <div className="flex flex-wrap gap-3">{children}</div>
+      <div className="flex flex-wrap gap-2">{children}</div>
     </div>
   );
 }

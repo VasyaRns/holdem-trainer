@@ -97,16 +97,16 @@ export function QuestionPrompt({ prompt }: { prompt: string }) {
   if (view.groups.length === 0) return <h1 className="text-2xl leading-snug">{prompt}</h1>;
   return (
     <div className="space-y-4">
-      <div className="rounded-xl bg-background p-3 sm:p-4">
-        <div className="flex flex-wrap items-end gap-x-8 gap-y-4">
-          {view.groups.map((group) => (
-            <CardRow key={group.label} label={group.label}>
+      <div className="grid gap-3 sm:grid-cols-2">
+        {view.groups.map((group) => (
+          <div key={group.label} className="rounded-lg border border-border bg-card p-3">
+            <CardRow label={group.label}>
               {group.cards.map((card, index) => (
                 <PlayingCard key={`${group.label}-${card.rank}${card.suit}-${index}`} rank={card.rank} suit={card.suit} />
               ))}
             </CardRow>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
       <h1 className="text-2xl leading-snug">{view.ask}</h1>
     </div>
