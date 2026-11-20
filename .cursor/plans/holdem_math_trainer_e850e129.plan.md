@@ -196,16 +196,16 @@ todos:
     status: completed
   - id: docs-readme
     content: "Документы 8.1: README, Docker Compose, CHARTS_PATH и проверки"
-    status: pending
+    status: completed
   - id: docs-research
     content: "Документы 8.2: docs/research.md"
-    status: pending
+    status: completed
   - id: docs-drills
     content: "Документы 8.3: docs/drills.md, формулы и уровни"
-    status: pending
+    status: completed
   - id: docs-ranges
     content: "Документы 8.4: docs/ranges.md, Chart, API спота и колода «Пар»"
-    status: pending
+    status: completed
 isProject: false
 ---
 

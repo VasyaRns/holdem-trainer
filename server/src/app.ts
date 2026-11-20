@@ -158,6 +158,7 @@ export function buildApp({ prisma, charts }: Deps): FastifyInstance {
   app.post("/api/pairs", async (request, reply) => {
     const playerId = request.cookies[cookieName]!;
     const body = request.body as {
+      id?: string;
       level?: string;
       chartId?: string;
       moves?: number;
@@ -168,19 +169,26 @@ export function buildApp({ prisma, charts }: Deps): FastifyInstance {
     if (!body.level || !body.chartId || body.moves == null || body.seconds == null || body.stars == null) {
       return reply.code(400).send({ error: "Неполная партия" });
     }
-    const game = await prisma.pairsGame.create({
-      data: {
-        playerId,
-        level: body.level,
-        chartId: body.chartId,
-        moves: body.moves,
-        seconds: body.seconds,
-        stars: body.stars,
-        passed: Boolean(body.passed),
-      },
-    });
-    const unlocked = await grantAchievements(prisma, playerId);
-    return { id: game.id, unlocked };
+    const data = {
+      ...(body.id ? { id: body.id } : {}),
+      playerId,
+      level: body.level,
+      chartId: body.chartId,
+      moves: body.moves,
+      seconds: body.seconds,
+      stars: body.stars,
+      passed: Boolean(body.passed),
+    };
+    try {
+      const game = await prisma.pairsGame.create({ data });
+      const unlocked = await grantAchievements(prisma, playerId);
+      return { id: game.id, unlocked };
+    } catch (error) {
+      if (body.id && typeof error === "object" && error !== null && "code" in error && error.code === "P2002") {
+        return { id: body.id, unlocked: [] };
+      }
+      throw error;
+    }
   });
 
   app.get("/api/achievements", async (request) => {

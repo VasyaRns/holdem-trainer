@@ -10,6 +10,14 @@ export function loadPairs(level: string) {
   return getJson<PairsSummary>(`/api/pairs?level=${encodeURIComponent(level)}`);
 }
 
-export function postPairs(game: { level: string; chartId: string; moves: number; seconds: number; stars: number; passed: boolean }) {
+export function postPairs(game: {
+  id: string;
+  level: string;
+  chartId: string;
+  moves: number;
+  seconds: number;
+  stars: number;
+  passed: boolean;
+}) {
   return postJson<{ id: string; unlocked?: string[] }>("/api/pairs", game);
 }

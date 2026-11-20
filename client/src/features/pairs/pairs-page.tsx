@@ -46,6 +46,8 @@ function countsOf(records: Partial<Record<LevelId, LevelRecord>> | null): Partia
   return next;
 }
 
+type PendingSave = PairsFinish & { id: string; level: string; chartId: string };
+
 function bestLine(record: LevelRecord | undefined): string | null {
   if (!record || record.passedCount == null) return null;
   if (record.bestSeconds == null || record.bestMoves == null) return "Лучших времени и ходов пока нет.";
@@ -72,7 +74,10 @@ export function PairsPage() {
   const [deck, setDeck] = useState<PairsDeck | null>(null);
   const saved = useRef(false);
   const sending = useRef(false);
-  const pending = useRef<PairsFinish | null>(null);
+  const pending = useRef<PendingSave | null>(null);
+  const gameKey = useRef(0);
+  const pendingKey = useRef(0);
+  const attemptId = useRef<string | null>(null);
   const counts = countsOf(records);
   const waiting = level !== "easy" && records === null;
   const allowed = level === "easy" || (records !== null && pairsLevelOpen(counts, level));
@@ -153,11 +158,12 @@ export function PairsPage() {
   }, [chartId, level, allowed]);
 
   useEffect(() => {
+    gameKey.current += 1;
+    attemptId.current = null;
     saved.current = false;
     sending.current = false;
-    pending.current = null;
-    setSaveError("");
     setNotices([]);
+    if (!pending.current) setSaveError("");
   }, [chartId, level]);
 
   function href(next: LevelId): string {
@@ -165,33 +171,50 @@ export function PairsPage() {
     return chartId ? `/pairs/${chartId}?${query}` : `/pairs?${query}`;
   }
 
-  function finish(result: PairsFinish) {
-    if (!chartId || saved.current || sending.current) return;
-    pending.current = result;
+  function write(payload: PendingSave, key: number) {
     sending.current = true;
     setSaveError("");
-    postPairs({ level, chartId, ...result })
+    postPairs(payload)
       .then((body) => {
-        saved.current = true;
-        pending.current = null;
-        if (body.unlocked && body.unlocked.length > 0) setNotices(body.unlocked.map(achievementTitle));
-        return loadPairs(level)
+        if (pending.current?.id === payload.id) {
+          pending.current = null;
+          setSaveError("");
+        }
+        if (gameKey.current === key) {
+          saved.current = true;
+          attemptId.current = null;
+          if (body.unlocked && body.unlocked.length > 0) setNotices(body.unlocked.map(achievementTitle));
+        }
+        return loadPairs(payload.level)
           .then((fresh) => {
             setRecords((current) => ({
               ...current,
-              [level]: {
+              [payload.level]: {
                 passedCount: fresh.passedCount,
                 bestSeconds: fresh.bestSeconds,
                 bestMoves: fresh.bestMoves,
               },
             }));
           })
-          .catch(() => setSaveError("Партия записана, счёт не обновился."));
+          .catch(() => {
+            if (gameKey.current === key) setSaveError("Партия записана, счёт не обновился.");
+          });
       })
-      .catch(() => setSaveError("Партия не записалась."))
+      .catch(() => {
+        if (pending.current?.id === payload.id) setSaveError("Партия не записалась.");
+      })
       .finally(() => {
-        sending.current = false;
+        if (gameKey.current === key) sending.current = false;
       });
+  }
+
+  function finish(result: PairsFinish) {
+    if (!chartId || saved.current || sending.current) return;
+    if (!attemptId.current) attemptId.current = crypto.randomUUID();
+    const payload: PendingSave = { id: attemptId.current, level, chartId, ...result };
+    pending.current = payload;
+    pendingKey.current = gameKey.current;
+    write(payload, pendingKey.current);
   }
 
   const line = bestLine(records?.[level]);
@@ -219,7 +242,14 @@ export function PairsPage() {
       {line ? <p className="num">{line}</p> : null}
       {saveError ? <p>{saveError}</p> : null}
       {saveError === "Партия не записалась." ? (
-        <button className="rounded-xl bg-primary px-4 py-2 text-primary-foreground" type="button" onClick={() => pending.current && finish(pending.current)}>
+        <button
+          className="rounded-xl bg-primary px-4 py-2 text-primary-foreground"
+          type="button"
+          onClick={() => {
+            const payload = pending.current;
+            if (payload) write(payload, pendingKey.current);
+          }}
+        >
           Записать снова
         </button>
       ) : null}
