@@ -39,7 +39,7 @@ function renderAt(path: string) {
 
 it("справочник объясняет ICM и не даёт тренировать несуществующий режим", async () => {
   renderAt("/guide");
-  expect(screen.getByText(/50, 30 и 20/)).toBeInTheDocument();
+  expect(screen.getAllByText(/50, 30 и 20/).length).toBeGreaterThan(0);
   expect(screen.getAllByText("Тренажёра пока нет").length).toBeGreaterThan(0);
   const filter = screen.getByLabelText("Фильтр терминов");
   fireEvent.change(filter, { target: { value: "эквити" } });

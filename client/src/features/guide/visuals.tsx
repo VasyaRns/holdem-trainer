@@ -48,6 +48,25 @@ export function ArticleVisual({ id }: { id: string }) {
       </div>
     );
   }
+  if (id === "backdoor") {
+    return (
+      <div className="space-y-4 rounded-xl border border-border bg-background p-4">
+        <p className="text-sm text-muted-foreground">После флопа нужны и терн, и ривер</p>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <CardRow label="В руке">
+            <PlayingCard rank="A" suit="h" />
+            <PlayingCard rank="K" suit="h" />
+          </CardRow>
+          <CardRow label="На борде">
+            <PlayingCard rank="2" suit="h" />
+            <PlayingCard rank="9" suit="c" />
+            <PlayingCard rank="4" suit="d" />
+          </CardRow>
+        </div>
+        <p className="num text-sm">Около 4%. Это не 9 аутов.</p>
+      </div>
+    );
+  }
   if (id === "rule") {
     return (
       <div className="grid gap-3 sm:grid-cols-2">

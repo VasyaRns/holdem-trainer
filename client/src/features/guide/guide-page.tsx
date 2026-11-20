@@ -1,4 +1,4 @@
-import { ARTICLES, filterTerms, type Article, type Term } from "@holdem/domain";
+import { ARTICLES, filterTerms, findArticle, type Article, type Term } from "@holdem/domain";
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -127,18 +127,23 @@ export function GuidePage() {
             <div key={group.group} className="space-y-3">
               <h3 className="text-lg">{groupTitle(group.group)}</h3>
               <ul className="space-y-3">
-                {group.terms.map((term) => (
-                  <li key={term.id} className="rounded-xl border border-border bg-card px-4 py-3">
-                    {term.articleId ? (
-                      <a className="font-medium text-primary" href={`#${term.articleId}`}>
-                        {term.title}
-                      </a>
-                    ) : (
-                      <span className="font-medium">{term.title}</span>
-                    )}
-                    <p className="mt-1 text-muted-foreground">{term.text}</p>
-                  </li>
-                ))}
+                {group.terms.map((term) => {
+                  const article = term.articleId ? findArticle(term.articleId) : undefined;
+                  return (
+                    <li key={term.id} className="space-y-3 rounded-xl border border-border bg-card px-4 py-3">
+                      {article ? (
+                        <a className="font-medium text-primary" href={`#${article.id}`}>
+                          {term.title}
+                        </a>
+                      ) : (
+                        <span className="font-medium">{term.title}</span>
+                      )}
+                      <p className="text-muted-foreground">{term.text}</p>
+                      {article ? <p className="num rounded-lg bg-background px-3 py-2">{article.example}</p> : null}
+                      {article && article.title !== term.title ? <p className="text-sm text-muted-foreground">Статья «{article.title}»</p> : null}
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           ))}

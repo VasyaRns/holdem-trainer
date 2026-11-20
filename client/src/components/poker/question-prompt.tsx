@@ -97,7 +97,8 @@ export function QuestionPrompt({ prompt }: { prompt: string }) {
   if (view.groups.length === 0) return <h1 className="text-2xl leading-snug">{prompt}</h1>;
   return (
     <div className="space-y-4">
-      <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap">
+      <div className="rounded-xl bg-background p-3 sm:p-4">
+        <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap">
         {view.groups.map((group) => (
           <CardRow key={group.label} label={group.label}>
             {group.cards.map((card, index) => (
@@ -105,6 +106,7 @@ export function QuestionPrompt({ prompt }: { prompt: string }) {
             ))}
           </CardRow>
         ))}
+        </div>
       </div>
       <h1 className="text-2xl leading-snug">{view.ask}</h1>
     </div>
